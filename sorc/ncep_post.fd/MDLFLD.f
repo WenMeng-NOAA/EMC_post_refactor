@@ -40,6 +40,7 @@
 !   14-11-17  B ZHOU - Undetected ECHO TOP value is modified from SPVAL to -5000.
 !   15-xx-xx  S. Moorthi - reduced memory version
 !   15-11-03  S Moorthi - fix a bug in "RELATIVE HUMIDITY ON MDLSURFACES" sectio logic
+!   19-10-30  Bo CUI - REMOVE "GOTO" STATEMENT
 !
 ! USAGE:    CALL MDLFLD
 !   INPUT ARGUMENT LIST:
@@ -728,7 +729,9 @@ refl_adj:           IF(REF_10CM(I,J,L)<=DBZmin) THEN
 
 !   -- rain
               ze_r = 1.e-35
-              if (qqr(i,j,ll).lt.1.e-6) go to 124
+              loop124: do
+!             if (qqr(i,j,ll).lt.1.e-6) go to 124
+              if (qqr(i,j,ll).lt.1.e-6) exit loop124
 
               rain = max(r1,qqr(i,j,ll))
               ronv = (const1r*tanh((qr0 - rain)/delqr0) +        &
@@ -736,11 +739,15 @@ refl_adj:           IF(REF_10CM(I,J,L)<=DBZmin) THEN
               SLOR=(RHOd*RAIN/(TOPR*RONV))**0.25
               ze_r = 720.*ronv*ron*slor**7 ! Stoelinga Eq. 2, reflectivity
 
+              exit loop124
+              enddo loop124
 124         continue
 
 !   -- snow
               ze_s = 1.e-35
-              if (qqs(i,j,ll).lt.1.e-6) go to 125
+              loop125: do
+!             if (qqs(i,j,ll).lt.1.e-6) go to 125
+              if (qqs(i,j,ll).lt.1.e-6) exit loop125
               snow = max(r1,qqs(i,j,ll))
 !             New SONV formulation based on Fig. 7, curve_3 of Houze et al 1979
               rhoqs=RHOd*snow
@@ -755,11 +762,16 @@ refl_adj:           IF(REF_10CM(I,J,L)<=DBZmin) THEN
               IF (T(i,j,ll) .gt. 273.15)                         &
                ze_s = ze_s*(1. + 4.28*bb)
 
+
+            exit loop125
+            enddo loop125
 125         continue
 
 !   -- graupel
               ze_g = 1.e-35
-              if (qqg(i,j,ll).lt.1.e-6) go to 126
+              loop126: do
+!             if (qqg(i,j,ll).lt.1.e-6) go to 126
+              if (qqg(i,j,ll).lt.1.e-6) exit loop126
               graupel = max(r1,qqg(i,j,ll))
               rhoqg=RHOd*graupel
               gonv=1.
@@ -774,6 +786,8 @@ refl_adj:           IF(REF_10CM(I,J,L)<=DBZmin) THEN
               IF (t(i,j,ll) .gt. 273.15)                         &
                ze_g = ze_g*(1. + 4.28*bb)
 
+            exit loop126
+            enddo loop126
 126         continue
 
 !   -- total grid scale
@@ -3888,6 +3902,7 @@ refl_adj:           IF(REF_10CM(I,J,L)<=DBZmin) THEN
         DO 101 I=1,IM
          LPBL(I,J)=LM
          ZSFC=ZINT(I,J,NINT(LMH(I,J))+1)
+         loop101: do
          DO L=NINT(LMH(I,J)),1,-1
           IF(MODELNAME.EQ.'RAPR') THEN
            HGT=ZMID(I,J,L)
@@ -3899,10 +3914,13 @@ refl_adj:           IF(REF_10CM(I,J,L)<=DBZmin) THEN
           IF(HGT .GT.  PBLHOLD+ZSFC)THEN
            LPBL(I,J)=L+1
            IF(LPBL(I,J).GE.LP1) LPBL(I,J) = LM
-           GO TO 101
+!          GO TO 101
+           exit loop101
           END IF
          END DO
          if(lpbl(i,j)<1)print*,'zero lpbl',i,j,pblri(i,j),lpbl(i,j)
+         exit loop101
+         enddo loop101
  101   CONTINUE
        IF(MODELNAME.EQ.'RAPR') THEN
         CALL CALGUST(LPBL,PBLHGUST,GUST)
@@ -3972,23 +3990,28 @@ refl_adj:           IF(REF_10CM(I,J,L)<=DBZmin) THEN
           DO I=1,IM
 !Initialed as 'undetected'.  Nov. 17, 2014, B. ZHOU:
 !changed from SPVAL to -5000. to distinguish missing grids and undetected 
+            loop201: do
 !           GRID1(I,J) = SPVAL      	      
             GRID1(I,J) = -5000.  !undetected initially         
             IF(IMP_PHYSICS == 8.)then ! If Thompson MP
               DO L=1,NINT(LMH(I,J))
                 IF(REF_10CM(I,J,L) > 18.3) then
                   GRID1(I,J) = ZMID(I,J,L)
-                  go to 201
+!                 go to 201
+                  exit loop201
                 ENDIF
               ENDDO
             ELSE ! if other MP than Thompson
               DO L=1,NINT(LMH(I,J))
                 IF(DBZ(I,J,L) > 18.3) then
                   GRID1(I,J) = ZMID(I,J,L)
-                  go to 201
+!                 go to 201
+                  exit loop201
                 END IF
               ENDDO
             END IF
+            exit loop201
+            enddo loop201
  201        CONTINUE
 !           if(grid1(i,j)<0.)print*,'bad echo top',  &
 !    +         i,j,grid1(i,j),dbz(i,j,1:lm)	       

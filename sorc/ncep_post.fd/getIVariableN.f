@@ -12,6 +12,7 @@ subroutine getIVariableN(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,
 !   .
 !
 ! PROGRAM HISTORY LOG:
+!  19-10-30  Bo CUI - REMOVE "GOTO" STATEMENT
 !
 ! USAGE:    CALL getVariable(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,LM,IM1,JS,JE,LM1)
 !
@@ -78,12 +79,14 @@ subroutine getIVariableN(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,
    end_index = 1
    call ext_ncd_get_var_info(dh,TRIM(VarName),ndim,ordering,Stagger,start_index,end_index,WrfType,ierr)
    allocate(data (end_index(1), end_index(2), end_index(3), 1))
+   loop27: do
    IF ( ierr /= 0 ) THEN
      write(*,*)'Error: ',ierr,TRIM(VarName),' not found in ',fileName
 !CHUANG make sure data=0 when not found in wrf output
      data=0.
    VarBuff=0.
-     go to 27
+!    go to 27
+     exit loop27
    ENDIF
    write(*,*)'WrfType in getIVariable= ',WrfType
 !   if( WrfType /= WRF_REAL .AND. WrfType /= WRF_REAL8 ) then !Ignore if not a real variable
@@ -130,6 +133,8 @@ subroutine getIVariableN(fileName,DateStr,dh,VarName,VarBuff,IM,JSTA_2L,JEND_2U,
      enddo
 !     write(*,*) Varname,' L ',l,': = ',data(1,1,ll,1)
     enddo
+    exit loop27
+    enddo loop27
  27 continue
    deallocate(data)
    return

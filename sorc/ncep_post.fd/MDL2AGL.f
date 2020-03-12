@@ -13,6 +13,7 @@
 ! PROGRAM HISTORY LOG:
 !   05-09-20  H CHUANG AND B ZHOU - ADD WIND DIFFERENCES OVER 2000 FT
 !   11-03-04  J WANG  - ADD grib2 option
+!   19-10-30  B CUI - REMOVE "GOTO" STATEMENT
 !     
 ! USAGE:    CALL MDL2P
 !   INPUT ARGUMENT LIST:
@@ -111,6 +112,8 @@
 !     SET TOTAL NUMBER OF POINTS ON OUTPUT GRID.
 !
 !---------------------------------------------------------------
+
+
       ZAGL(1)  = 4000.
       ZAGL(2)  = 1000.
       ZAGL2(1) = 609.6  ! 2000 ft
@@ -1254,7 +1257,8 @@
                   ZDUM=ZMID(I,J,L)-ZINT(I,J,LLMH+1)
                   IF(ZDUM >= ZAGL2(LP))THEN
                     NL1X(I,J)=L+1
-                    GO TO 40
+!                   GO TO 40
+                    exit     
                   ENDIF
                 ENDDO
    40           CONTINUE
@@ -1493,7 +1497,8 @@
                   ZDUM = ZMID(I,J,L)-ZINT(I,J,LLMH+1)
                   IF(ZDUM >= ZAGL3(LP))THEN
                     NL1X(I,J) = L+1
-                    GO TO 50
+!                   GO TO 50
+                    exit     
                   ENDIF
                 ENDDO
    50           CONTINUE
