@@ -25,6 +25,7 @@
 !   12-01-11  S LU     - ADD GOCART AEROSOLS
 !   13-08-01  S Moorthi - some optimization
 !   14-02-26  S Moorthi - threading datapd assignment
+!   19-10-30  B CUI - REMOVE "GOTO" STATEMENT
 !
 ! USAGE:    CALL MDL2P
 !   INPUT ARGUMENT LIST:
@@ -1068,10 +1069,12 @@
 !
 !***  OUTPUT GEOPOTENTIAL (SCALE BY GI)
 !
+            loop222: do
             IF(IGET(012) > 0)THEN
               IF(LVLS(LP,IGET(012)) > 0)THEN
                 IF((IGET(023) > 0 .OR. IGET(445) > 0) .AND. NINT(SPL(LP)) == 100000) THEN
-                  GO TO 222
+!                 GO TO 222
+                  exit loop222
                 ELSE
 !$omp  parallel do private(i,j)
                   DO J=JSTA,JEND
@@ -1123,6 +1126,8 @@
                 END IF
               ENDIF
             ENDIF
+            exit loop222
+            enddo loop222
  222        CONTINUE
 !     
 !***  TEMPERATURE
@@ -2092,7 +2097,7 @@
              if(grib == 'grib1')then
                ID(1:25)=0
                ID(02)=141             ! Parameter Table 141
-
+                        
                CALL GRIBIT(IGET(738),LP,GRID1,IM,JM)
              elseif(grib == 'grib2') then
                cfld = cfld + 1
