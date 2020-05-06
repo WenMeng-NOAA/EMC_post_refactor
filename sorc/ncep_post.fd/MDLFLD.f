@@ -96,6 +96,7 @@
               me, dt, avrain, theat, ifhr, ifmin, avcnvc, lp1, im, jm
       use rqstfld_mod, only: iget, id, lvls, iavblfld, lvlsxml
       use gridspec_mod, only: gridtype,maptype,dxval
+      use CALRH_MODULE
 !     
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
        implicit none

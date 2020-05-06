@@ -81,6 +81,7 @@
                             imp_physics
       use rqstfld_mod, only: IGET, LVLS, ID, IAVBLFLD, LVLSXML
       use gridspec_mod, only: GRIDTYPE, MAPTYPE, DXVAL
+      use CALRH_MODULE
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 !
       implicit none

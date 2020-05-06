@@ -91,6 +91,7 @@
                             jsta_2l, jend_2u, MODELNAME
       use rqstfld_mod, only: iget, lvls, id, iavblfld, lvlsxml
       use grib2_module, only: pset
+      use CALRH_MODULE
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
        implicit none
 !

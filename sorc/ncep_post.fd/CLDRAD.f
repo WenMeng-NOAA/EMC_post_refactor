@@ -125,6 +125,7 @@
       use gridspec_mod, only: dyval, gridtype
       use cmassi_mod,  only: TRAD_ice
       use machine_post,     only: kind_phys
+      use CALRH_MODULE
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !     
