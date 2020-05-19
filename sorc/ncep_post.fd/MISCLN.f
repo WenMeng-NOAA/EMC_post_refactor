@@ -91,7 +91,7 @@
                             jsta_2l, jend_2u, MODELNAME
       use rqstfld_mod, only: iget, lvls, id, iavblfld, lvlsxml
       use grib2_module, only: pset
-      use CALRH_MODULE
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
        implicit none
 !
@@ -157,7 +157,7 @@
       integer :: nFDS ! How many fields with the same HTFDCTL in the control file
       integer :: iID ! which field with HTFDCTL      
 
-      real,external :: fpvsnew
+!      real,external :: fpvsnew
 !     
 !****************************************************************************
 !     START MISCLN HERE.

@@ -61,7 +61,7 @@
                             jsta_2l, jend_2u, im, jm, jsta, jend, imp_physics
       use rqstfld_mod,  only: iget, lvls, iavblfld, lvlsxml, id
       use gridspec_mod, only: gridtype
-      use CALRH_MODULE
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
       INCLUDE "mpif.h"

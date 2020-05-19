@@ -64,6 +64,7 @@
       use masks,      only: htm
       use params_mod, only: tfrz, gi
       use ctlblk_mod, only: lm, jsta, jend, im
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !     
@@ -82,7 +83,7 @@
       real,dimension(IM,jsta:jend),intent(inout) :: PW
       INTEGER LLMH,I,J,L
       REAL ALPM,DZ,PM,PWSUM,RHOAIR,DP,ES
-      real,external :: FPVSNEW
+!      real,external :: FPVSNEW
       REAL QDUM(IM,jsta:jend), PWS(IM,jsta:jend),QS(IM,jsta:jend)
 !
 !***************************************************************

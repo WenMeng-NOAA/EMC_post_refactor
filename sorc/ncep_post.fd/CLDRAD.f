@@ -69,6 +69,7 @@
 !   19-07-24  Li(Kate) Zhang Merge and update ARAH Lu's work from NGAC into FV3-Chem
 !   19-10-30  Bo CUI - Remove "GOTO" statement
 !   20-03-25  Jesse Meng - remove grib1
+!   20-05-20  Jesse Meng - CALRH unification with NAM scheme
 !     
 ! USAGE:    CALL CLDRAD
 !   INPUT ARGUMENT LIST:
@@ -125,7 +126,7 @@
       use gridspec_mod, only: dyval, gridtype
       use cmassi_mod,  only: TRAD_ice
       use machine_post,     only: kind_phys
-      use CALRH_MODULE
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !     
@@ -4448,7 +4449,8 @@ snow_check:   IF (QQS(I,J,L)>=QCLDmin) THEN
               Q1D(I,J) = Q(I,J,LL)
             ENDDO
           ENDDO
-          CALL CALRH_GFS(P1D,T1D,Q1D,EGRID4)
+!          CALL CALRH_GFS(P1D,T1D,Q1D,EGRID4)
+          CALL CALRH(P1D,T1D,Q1D,EGRID4)
           DO J=JSTA,JEND
             DO I=1,IM
 !             RH3D(I,J,LL) = EGRID4(I,J)

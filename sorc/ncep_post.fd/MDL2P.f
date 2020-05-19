@@ -27,6 +27,7 @@
 !   14-02-26  S Moorthi - threading datapd assignment
 !   19-10-30  B CUI - REMOVE "GOTO" STATEMENT
 !   20-03-25  J MENG   - remove grib1
+!   20-05-20  J MENG   - CALRH unification with NAM scheme
 !
 ! USAGE:    CALL MDL2P
 !   INPUT ARGUMENT LIST:
@@ -81,7 +82,7 @@
                             imp_physics
       use rqstfld_mod, only: IGET, LVLS, ID, IAVBLFLD, LVLSXML
       use gridspec_mod, only: GRIDTYPE, MAPTYPE, DXVAL
-      use CALRH_MODULE
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 !
       implicit none
@@ -133,7 +134,7 @@
       integer I,J,L,LP,LL,LLMH,JJB,JJE,II,JJ,LI,IFINCR,ITD3D,ista,imois,luhi,la
       real fact,ALPSL,PSFC,QBLO,PNL1,TBLO,TVRL,TVRBLO,FAC,PSLPIJ,            &
            ALPTH,AHF,PDV,QL,TVU,TVD,GAMMAS,QSAT,RHL,ZL,TL,PL,ES,part,dum1
-      real,external :: fpvsnew
+!      real,external :: fpvsnew
       logical log1
       real dxm, tem, zero
 !     
@@ -1263,13 +1264,14 @@
               ENDDO
             ENDDO
 !
-            IF(MODELNAME == 'GFS' .or. MODELNAME == 'FV3R')THEN
-              CALL CALRH_GFS(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
-            ELSEIF (MODELNAME == 'RAPR')THEN 
-              CALL CALRH_GSD(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
-            ELSE
-              CALL CALRH(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
-            END IF 
+            CALL CALRH(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
+!            IF(MODELNAME == 'GFS' .or. MODELNAME == 'FV3R')THEN
+!              CALL CALRH_GFS(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
+!            ELSEIF (MODELNAME == 'RAPR')THEN 
+!              CALL CALRH_GSD(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
+!            ELSE
+!              CALL CALRH(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
+!            END IF 
 
 !$omp  parallel do private(i,j)
             DO J=JSTA,JEND

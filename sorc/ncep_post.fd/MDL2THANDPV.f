@@ -48,6 +48,7 @@
               im, jm, jsta, jend, jsta_m, jend_m, modelname, global,gdsdegr,me
       use RQSTFLD_mod, only: iget, lvls, id, iavblfld, lvlsxml
       use gridspec_mod, only: gridtype,dyval
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !     
@@ -76,7 +77,7 @@
       integer, dimension(im) :: iw, ie
       integer I,J,L,K,lp,imb2,ip1,im1,ii,jj,jmt2,ihw,ihe
       real    DVDX,DUDY,UAVG,TPHI, es, qstl, eradi, tem
-      real,external :: fpvsnew
+!      real,external :: fpvsnew
 !
 !     
 !******************************************************************************

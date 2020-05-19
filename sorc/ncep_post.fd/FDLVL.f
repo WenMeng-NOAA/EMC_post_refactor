@@ -79,6 +79,7 @@
                             JEND_M, HTFD, NFD, IM, JM, NBIN_DU, gocart_on,   &
                             MODELNAME
       use gridspec_mod, only: GRIDTYPE
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !
@@ -902,6 +903,7 @@
                             JEND_M, IM, JM,global,MODELNAME
       use gridspec_mod, only: GRIDTYPE
       use physcons_post,only: CON_FVIRT, CON_ROG, CON_EPS, CON_EPSM1
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !
@@ -910,7 +912,7 @@
 !     DECLARE VARIABLES
 !     
       real,parameter:: zshul=75.,tvshul=290.66
-      real,external :: fpvsnew
+!      real,external :: fpvsnew
 
       integer,intent(in) ::  ITYPE(NFD)
       integer,intent(in) :: NFD ! coming from calling subroutine

@@ -64,7 +64,7 @@
                                jm, im_jm
       use rqstfld_mod,   only: iget, lvls, id, iavblfld, lvlsxml
       use gridspec_mod,  only :gridtype
-      use CALRH_MODULE
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
        implicit none
 !     

@@ -53,6 +53,7 @@
       use masks, only: lmh
       use params_mod, only: eps, oneps, d01, h1m12, gi, d00
       use ctlblk_mod, only: jsta, jend, spval, jsta_m, jend_m, im
+      use UPP_PHYSICS
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
 !     
