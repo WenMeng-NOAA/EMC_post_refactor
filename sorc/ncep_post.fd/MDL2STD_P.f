@@ -525,8 +525,8 @@
                   EGRID4(1:IM,JSTA:JEND)=QFD(1:IM,JSTA:JEND,IFD,2) ! Q
                   EGRID1 = SPVAL
 
-                  CALL CALRH(EGRID2(1,jsta),EGRID3(1,jsta),&
-                       EGRID4(1,jsta), EGRID1(1,jsta))
+                  CALL CALRH(EGRID2(:,jsta:jend),EGRID3(:,jsta:jend),&
+                             EGRID4(:,jsta:jend),EGRID1(:,jsta:jend))
 !                  IF(MODELNAME == 'GFS' .or. MODELNAME == 'FV3R')THEN
 !                     CALL CALRH_GFS(EGRID2(1,jsta),EGRID3(1,jsta),&
 !                       EGRID4(1,jsta), EGRID1(1,jsta))

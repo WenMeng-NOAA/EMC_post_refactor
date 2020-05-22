@@ -1264,7 +1264,8 @@
               ENDDO
             ENDDO
 !
-            CALL CALRH(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
+            CALL CALRH(EGRID2(:,jsta:jend),TSL(:,jsta:jend),QSL(:,jsta:jend),EGRID1(:,jsta:jend))
+!            CALL CALRH(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
 !            IF(MODELNAME == 'GFS' .or. MODELNAME == 'FV3R')THEN
 !              CALL CALRH_GFS(EGRID2(1,jsta),TSL(1,jsta),QSL(1,jsta),EGRID1(1,jsta))
 !            ELSEIF (MODELNAME == 'RAPR')THEN 

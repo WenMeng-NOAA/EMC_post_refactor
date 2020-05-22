@@ -1548,7 +1548,8 @@ refl_adj:           IF(REF_10CM(I,J,L)<=DBZmin) THEN
                   Q1D(I,J) = Q(I,J,LL)
                 ENDDO
               ENDDO
-              CALL CALRH(P1D(1,jsta),T1D(1,jsta),Q1D(1,jsta),EGRID4(1,jsta))
+
+              CALL CALRH(P1D(:,jsta:jend),T1D(:,jsta:jend),Q1D(:,jsta:jend),EGRID4(:,jsta:jend))
 !              IF(MODELNAME == 'GFS')THEN
 !                CALL CALRH_GFS(P1D(1,jsta),T1D(1,jsta),Q1D(1,jsta),EGRID4(1,jsta))
 !              ELSE IF (MODELNAME == 'RAPR')THEN

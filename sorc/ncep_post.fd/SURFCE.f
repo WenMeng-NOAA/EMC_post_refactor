@@ -1492,7 +1492,7 @@
              ENDDO
            ENDDO
 !            CALL CALRH(PSHLTR,TSHLTR,QSHLTR,EGRID1)
-           CALL CALRH(P1D,T1D,Q1D,EGRID1(1,jsta))
+           CALL CALRH(P1D,T1D,Q1D,EGRID1(:,jsta:jend))
 !           IF(MODELNAME == 'GFS')THEN
 !             CALL CALRH_GFS(P1D,T1D,Q1D,EGRID1(1,jsta))
 !           ELSEIF(MODELNAME == 'RAPR')THEN

@@ -2,12 +2,26 @@
 !-------------------------------------------------------------------------------------
 ! A collection of UPP subroutines for physics variables calculation.
 !
-! Computes RH using various algorithms.
-! The NAM v4.1.18 ALGORITHM is selected as default for the UPP 2020 unification. 
-!
+! CALCAPE
 ! Compute CAPE/CINS and other storm related variables.
 !
-! program log:
+! CALCAPE2
+! Compute additional storm related variables.
+!
+! CALRH
+! Compute RH using various algorithms.
+! The NAM v4.1.18 ALGORITHM is selected as default for the UPP 2020 unification.
+!
+! CALRH_PW
+! Algorithm use at GSD for RUC and Rapid Refresh
+!
+! FPVSNEW
+! Compute saturation vapor pressure.
+!
+! TVIRTUAL
+! Compute virtual temperature.
+!
+! PROGRAM HISTORY LOG:
 !   MAY, 2020    Jesse Meng   Initial code
 !-------------------------------------------------------------------------------------
 !
@@ -15,23 +29,17 @@
 !
   implicit none
 
+  private
+
+  public :: CALCAPE, CALCAPE2
+  public :: CALRH, CALRH_PW
+  public :: FPVSNEW, TVIRTUAL
+
+  interface CALRH
+    module procedure CALRH_NAM
+  end interface
+
   contains
-!
-!-------------------------------------------------------------------------------------
-!
-      SUBROUTINE CALRH(P1,T1,Q1,RH)
-
-      use ctlblk_mod, only: jsta, jend, im
-
-      implicit none
-
-      REAL,dimension(IM,jsta:jend),intent(in)    :: P1,T1
-      REAL,dimension(IM,jsta:jend),intent(inout) :: Q1
-      REAL,dimension(IM,jsta:jend),intent(out)   :: RH
-
-      CALL CALRH_NAM(P1,T1,Q1,RH)
-
-      END SUBROUTINE CALRH
 !
 !-------------------------------------------------------------------------------------
 !
@@ -897,9 +905,11 @@
               GDZKL   = (ZINT(I,J,L)-ZINT(I,J,L+1)) * G
               ESATP  = min(FPVSNEW(TPAR(I,J,L)),PRESK)
               QSATP  = EPS*ESATP/(PRESK-ESATP*ONEPS)
-              TVP    = TPAR(I,J,L)*(1+0.608*QSATP)
+!              TVP    = TPAR(I,J,L)*(1+0.608*QSATP)
+              TVP    = TVIRTUAL(TPAR(I,J,L),QSATP)
               THETAP = TVP*(H10E5/PRESK)**CAPA
-              TV     = T(I,J,L)*(1+0.608*Q(I,J,L)) 
+!              TV     = T(I,J,L)*(1+0.608*Q(I,J,L)) 
+              TV     = TVIRTUAL(T(I,J,L),Q(I,J,L))
               THETAA = TV*(H10E5/PRESK)**CAPA
               IF(THETAP < THETAA) THEN
                 CINS(I,J) = CINS(I,J) + (LOG(THETAP)-LOG(THETAA))*GDZKL
@@ -1735,6 +1745,20 @@
       DEALLOCATE(TPAR2)
 !     
       END SUBROUTINE CALCAPE2
+!
+!-------------------------------------------------------------------------------------
+!
+      elemental function TVIRTUAL(T,Q)
+!
+! COMPUTE VIRTUAL TEMPERATURE
+!
+      IMPLICIT NONE
+      REAL TVIRTUAL
+      REAL, INTENT(IN) :: T, Q
+
+      TVIRTUAL = T*(1+0.608*Q)
+
+      end function TVIRTUAL
 !
 !-------------------------------------------------------------------------------------
 !
