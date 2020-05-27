@@ -1183,7 +1183,7 @@
           DCAPE(I,J)   = D00
           DGLD(I,J)    = D00
           ESP(I,J)     = D00
-          THESP2(I,J)  = 500.
+          THESP2(I,J)  = 1000.
           PSP2(I,J)    = D00
           PARCEL2(I,J) = LM
         ENDDO
@@ -1496,7 +1496,8 @@
           ENDDO
         ENDDO
 !
-!$omp  parallel do private(i,j,gdzkl,presk,thetaa,thetap,esatp,qsatp,tvp,tv)
+!$omp  parallel do private(i,j,gdzkl,presk,thetaa,thetap,esatp,qsatp,tvp,tv,&
+!$omp &                    presk2,esatp2,qsatp2,tvp2,thetap2,tv2,thetaa2)
         DO J=JSTA,JEND
           DO I=1,IM
             IF(IDX(I,J) > 0) THEN
@@ -1585,24 +1586,9 @@
       ENDDO
 !------------COMPUTE DCAPE--------------------------------------
 !-----------------------------------------------------------------------
-!-----CHOOSE LAYER DIRECTLY BELOW PSP2 AS LCL AND------------------------
-      DO L=1,LM
-!$omp  parallel do private(i,j)
-        DO J=JSTA,JEND
-          DO I=1,IM
-            IF (PMID(I,J,L) < PSP2(I,J))    LCL(I,J) = L+1
-          ENDDO
-        ENDDO
-      ENDDO
-!$omp  parallel do private(i,j)
-      DO J=JSTA,JEND
-        DO I=1,IM
-          IF (LCL(I,J) > NINT(LMH(I,J))) LCL(I,J) = NINT(LMH(I,J))
-        ENDDO
-      ENDDO
-
 !---------FIND TEMP OF PARCEL DESCENDED ALONG MOIST ADIABAT (TPAR)---------
 !-----------------------------------------------------------------------
+      IF (ITYPE == 1) THEN
 
       DO L=LM,1,-1
 !--------------SCALING PRESSURE & TT TABLE INDEX------------------------
@@ -1612,7 +1598,9 @@
           DO I=1,IM
             KLRES(I,J) = 0
             KHRES(I,J) = 0
-      !      IF(L <= LCL(I,J)) THEN
+            PSFCK  = PMID(I,J,NINT(LMH(I,J)))
+            PKL    = PMID(I,J,L)
+            IF(PKL >= PSFCK-DPBND) THEN
               IF(PMID(I,J,L) < PLQ)THEN
                 KNUML = KNUML + 1
                 KLRES(I,J) = 1
@@ -1620,10 +1608,7 @@
                 KNUMH = KNUMH + 1
                 KHRES(I,J) = 1
               ENDIF
-      !      ENDIF
-              PSFCK  = PMID(I,J,NINT(LMH(I,J)))
-              PKL    = PMID(I,J,L)
-              IF(PKL >= PSFCK-DPBND) PARCEL2(I,J)=L
+            ENDIF
           ENDDO
         ENDDO
 !***
@@ -1644,23 +1629,15 @@
         ENDIF
       ENDDO                  ! end of do l=lm,1,-1 loop
 
-      LBEG = LM
+      LBEG = 1
       LEND = LM
-!$omp  parallel do private(i,j)
-      DO J=JSTA,JEND
-        DO I=1,IM
-         ! LBEG = MIN(PARCEL2(I,J),LBEG)
-          LBEG = MIN(LCL(I,J),LBEG)
-        ENDDO
-      ENDDO
 
-      DO L=LBEG,LM
+      DO L=LBEG,LEND
 !$omp parallel do private(i,j)
         DO J=JSTA,JEND
           DO I=1,IM
             IDX(I,J) = 0
-           ! IF(L >= PARCEL2(I,J)) THEN
-            IF(L >= LCL(I,J)) THEN
+            IF(L >= PARCEL2(I,J).AND.L < NINT(LMH(I,J))) THEN
               IDX(I,J) = 1
             ENDIF
           ENDDO
@@ -1678,10 +1655,9 @@
               THETAP = TVP*(H10E5/PRESK)**CAPA
               TV     = T(I,J,L)*(1+0.608*Q(I,J,L))
               THETAA = TV*(H10E5/PRESK)**CAPA
-              !IF(THETAP > THETAA) THEN
-              IF(THETAP < THETAA) THEN
+              !IF(THETAP < THETAA) THEN
                 DCAPE(I,J) = DCAPE(I,J) + (LOG(THETAP)-LOG(THETAA))*GDZKL
-              ENDIF
+              !ENDIF
             ENDIF
           ENDDO
         ENDDO
@@ -1690,10 +1666,12 @@
 !$omp parallel do private(i,j)
       DO J=JSTA,JEND
         DO I=1,IM
-          !DCAPE(I,J) = MAX(D00,DCAPE(I,J))
           DCAPE(I,J) = MIN(D00,DCAPE(I,J))
         ENDDO
       ENDDO
+
+      ENDIF !ITYPE=1 FOR DCAPE
+
 !
 ! Dendritic Growth Layer depth
 ! the layer with temperatures from -12 to -17 C in meters
