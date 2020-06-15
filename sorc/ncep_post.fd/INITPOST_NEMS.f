@@ -64,6 +64,7 @@
               lonlastv, cenlonv
       use rqstfld_mod, only:
       use nemsio_module, only: nemsio_gfile, nemsio_getfilehead, nemsio_close, nemsio_getheadvar
+      use UPP_MATH
 !
 !     INCLUDE/SET PARAMETERS.
       implicit none
