@@ -46,6 +46,7 @@
       use vrbls2d
       use soil
       use masks
+      use UPP_MATH
 !
       !use params_mod
       use ctlblk_mod
@@ -533,5 +534,9 @@
       allocate(acswupt(im,jsta_2l:jend_2u))
       allocate(swdnt(im,jsta_2l:jend_2u))
       allocate(acswdnt(im,jsta_2l:jend_2u))
+! DIFFERENTIAL EQUATIONS
+      allocate(ddvdx(im,jsta_2l:jend_2u))
+      allocate(ddudy(im,jsta_2l:jend_2u))
+      allocate(uuavg(im,jsta_2l:jend_2u))
 ! 
       end

@@ -41,8 +41,9 @@
       use masks,        only: lmh, dx, dy
       use params_mod,   only: d00
       use ctlblk_mod,   only: lm, jsta_2l, jend_2u, jsta_m, jend_m,   &
-                              global, spval, im, jm
+                              global, spval, im, jm, me
       use gridspec_mod, only: gridtype
+      use UPP_MATH
 
       implicit none
 
@@ -123,19 +124,23 @@
 
               ENDIF
 
-              IF(GRIDTYPE == 'A')THEN
-                DVDX   = (VH(I+1,J,L)-VH(I-1,J,L))*R2DX
-                DUDY   = (UH(I,J+1,L)-UH(I,J-1,L))*R2DY
-              ELSE IF (GRIDTYPE == 'E')THEN
-                DVDX   = (VH(I+IHE(J),J,L)-VH(I+IHW(J),J,L))*R2DX
-                DUDY   = (UH(I,J+1,L)-UH(I,J-1,L))*R2DY
-              ELSE IF (GRIDTYPE == 'B')THEN
+              CALL DVDXDUDY(UH(:,:,L),VH(:,:,L))
+              DVDX   = DDVDX(I,J)
+              DUDY   = DDUDY(I,J)
+
+!              IF(GRIDTYPE == 'A')THEN
+!                DVDX   = (VH(I+1,J,L)-VH(I-1,J,L))*R2DX
+!                DUDY   = (UH(I,J+1,L)-UH(I,J-1,L))*R2DY
+!              ELSE IF (GRIDTYPE == 'E')THEN
+!                DVDX   = (VH(I+IHE(J),J,L)-VH(I+IHW(J),J,L))*R2DX
+!                DUDY   = (UH(I,J+1,L)-UH(I,J-1,L))*R2DY
+!              ELSE IF (GRIDTYPE == 'B')THEN
 !! seems like these are 1/dx, 1/dy
-                DVDX = (0.5*(VH(I,J,L)+VH(I,J-1,L))-0.5*(VH(I-1,J,L) &
-                            +VH(I-1,J-1,L)))*2.*R2DX
-                DUDY = (0.5*(UH(I,J,L)+UH(I-1,J,L))-0.5*(UH(I,J-1,L) &
-                            +UH(I-1,J-1,L)))*2.*R2DY
-              ENDIF
+!                DVDX = (0.5*(VH(I,J,L)+VH(I,J-1,L))-0.5*(VH(I-1,J,L) &
+!                            +VH(I-1,J-1,L)))*2.*R2DX
+!                DUDY = (0.5*(UH(I,J,L)+UH(I-1,J,L))-0.5*(UH(I,J-1,L) &
+!                            +UH(I-1,J-1,L)))*2.*R2DY
+!              ENDIF
 
               UPDHEL(I,J)=UPDHEL(I,J)+(DVDX-DUDY)*WH(I,J,L)*DZ
 

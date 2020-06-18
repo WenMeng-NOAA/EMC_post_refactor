@@ -72,12 +72,13 @@
                             jsta_m, jend_m, im, nbnd
       use physcons_post,   only: con_rd, con_rv, con_eps, con_epsm1
       use gridspec_mod, only: gridtype
+      use UPP_PHYSICS
 !
       implicit none
 !
 !     DECLARE VARIABLES.
 !
-      real,external :: FPVSNEW
+!      real,external :: FPVSNEW
       real,PARAMETER :: DPBND=30.E2
       integer, dimension(IM,jsta:jend,NBND),intent(inout) :: LVLBND
       real,    dimension(IM,jsta:jend,NBND),intent(inout) :: PBND,TBND,  &

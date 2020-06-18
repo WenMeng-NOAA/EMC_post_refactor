@@ -48,6 +48,7 @@
                             RDP, THE0, STHE, RDTHE, TTBL
       use ctlblk_mod, only: JSTA, JEND, IM
       use params_mod, only: D00,H10E5, CAPA, ELOCP, EPS, ONEPS
+      use UPP_PHYSICS
 !
 
 !
@@ -55,7 +56,7 @@
 !
 !     SET LOCAL PARAMETERS.
        real,PARAMETER :: D8202=.820231E0 , H5E4=5.E4 , P500=50000.
-       real,external::FPVSNEW
+!       real,external::FPVSNEW
 
 !     
 !     DECLARE VARIABLES.
