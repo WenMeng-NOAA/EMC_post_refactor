@@ -10,6 +10,7 @@
 !
 ! PROGRAM HISTORY LOG:
 !   06-11-01 SWIPED FROM WRF SI PACKAGE BY ROZUMALSKI
+!   20-06-30 Bo CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !
 !   INPUT ARGUMENT LIST:
 !     LAT     - LATITUDE AT WHICH MAP FACTOR IS VALID
@@ -38,7 +39,7 @@
 
       REAL                       :: psi1, psix, pole
 
-      IF (truelat1 .GE. 0.) THEN
+      IF (truelat1 >= 0.) THEN
         psi1 = (90. - truelat1) * rad_per_deg
         pole =90.
       ELSE

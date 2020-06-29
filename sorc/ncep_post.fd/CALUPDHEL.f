@@ -12,6 +12,7 @@
 !   07-10-22  M PYLE - based on SPC Algorithm courtesy of David Bright
 !   11-01-11  M Pyle - converted to F90 for unified post
 !   11-04-05  H Chuang - added B grid option
+!   20-06-30  Bo CUI - Modernize inequality statements from Fortran 77 to 90
 !     
 ! USAGE:    CALL CALUPDHEL(UPDHEL)
 !
@@ -110,11 +111,11 @@
               EXIT l_loop
             END IF 
 
-            IF ( (ZMIDLOC - HTSFC(I,J)) .ge. HLOWER  .AND.  &
-                 (ZMIDLOC - HTSFC(I,J)) .le. HUPPER ) THEN
+            IF ( (ZMIDLOC - HTSFC(I,J)) >= HLOWER  .AND.  &
+                 (ZMIDLOC - HTSFC(I,J)) <= HUPPER ) THEN
               DZ=(ZINT(I,J,L)-ZINT(I,J,L+1))
 
-              IF (WH(I,J,L) .lt. 0) THEN
+              IF (WH(I,J,L) < 0) THEN
 
 !          ANY DOWNWARD MOTION IN 2-5 km LAYER KILLS COMPUTATION AND
 !          SETS RESULTANT UPDRAFT HELICTY TO ZERO

@@ -22,6 +22,7 @@
 !   01-10-22  H CHUANG - MODIFIED TO PROCESS HYBRID MODEL OUTPUT
 !   02-01-16  MIKE BALDWIN - WRF VERSION
 !   19-10-30  Bo CUI - REMOVE "GOTO" STATEMENT
+!   20-06-30  B CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !     
 ! USAGE:    CALL READCNTRL(IEOF)
 !   INPUT ARGUMENT LIST:
@@ -78,7 +79,7 @@
       LCNTRL=14
       LUNOUT=60
 
-      IF(ME.EQ.0)THEN
+      IF(ME==0)THEN
         WRITE(6,*)'READCNTRL:  POSTING FCST HR ',IFHR,' FROM ',         &
              IHRST,'UTC ',SDAT(1),'-',SDAT(2),'-',SDAT(3),' RUN'
       ENDIF
@@ -92,7 +93,7 @@
         IGET(IFLD)=-1
  100  CONTINUE
 !
-      if(me.eq.0)print*,'start reading control file'
+      if(me==0)print*,'start reading control file'
 !
       READ(LCNTRL,1000,ERR=990,END=999) KGTYPE
       READ(LCNTRL,1000,ERR=990,END=999) IMDLTY
@@ -106,7 +107,7 @@
 !     
 !     ECHO HEADER INFO TO 6.
 !
-      IF(ME.EQ.0)THEN
+      IF(ME==0)THEN
         WRITE(6,*)'READCNTRL:  HEADER INFORMATION'
         WRITE(6,*)' KGTYPE       :  ',KGTYPE
         WRITE(6,*)' IMDLTY       :  ',IMDLTY
@@ -124,10 +125,10 @@
  10   CONTINUE
          loop40: do
          READ(LCNTRL,1060,ERR=996) LINE
-!        IF (INDEX(LINE,'DONE').NE.0) GOTO 40
-!        IF (INDEX(LINE,'SCAL=').EQ.0)   GOTO 10
-         IF (INDEX(LINE,'DONE').NE.0) exit loop40
-         IF (INDEX(LINE,'SCAL=').EQ.0)   cycle loop10
+!        IF (INDEX(LINE,'DONE')/=0) GOTO 40
+!        IF (INDEX(LINE,'SCAL=')==0)   GOTO 10
+         IF (INDEX(LINE,'DONE')/=0) exit loop40
+         IF (INDEX(LINE,'SCAL=')==0)   cycle loop10
          IFLD        = IFLD+1
          FIELD(IFLD) = LINE(3:22)
          READ(LINE,1061) DEC(IFLD)
@@ -151,7 +152,7 @@
          DO 15 L = 1,MXLVL
             ISUM = ISUM + LVLS(L,IFLD)
  15      CONTINUE
-         IF (ISUM.LT.1) THEN
+         IF (ISUM<1) THEN
             IFLD = IFLD - 1
 !           GOTO 10
             cycle loop10
@@ -163,10 +164,10 @@
 !     
          loop30: do
          DO 20 IAVBL = 1,MXFLD
-!           IF (INDEX(FIELD(IFLD),AVBL(IAVBL)).NE.0)GO TO 30
-            IF (INDEX(FIELD(IFLD),AVBL(IAVBL)).NE.0) exit loop30
+!           IF (INDEX(FIELD(IFLD),AVBL(IAVBL))/=0)GO TO 30
+            IF (INDEX(FIELD(IFLD),AVBL(IAVBL))/=0) exit loop30
  20      CONTINUE
-         IF(ME.EQ.0)THEN
+         IF(ME==0)THEN
            WRITE(6,*)'FIELD ',FIELD(IFLD),' NOT AVAILABLE'
          ENDIF
          IFLD = IFLD-1
@@ -205,12 +206,12 @@
 !     
 !     ECHO OUTPUT FIELDS/LEVELS TO 6.
 !
-      IF(ME.EQ.0)THEN
+      IF(ME==0)THEN
         WRITE(6,*)'BELOW ARE FIELD/LEVEL/SMOOTHING ',       &
              'SPECIFICATIONS.,NFLD=',NFLD,'MXLVL=',MXLVL
       ENDIF
       DO 50 IFLD = 1,NFLD
-        IF(ME.EQ.0)THEN
+        IF(ME==0)THEN
          WRITE(6,2060) FIELD(IFLD)
          WRITE(6,2070) (LVLS(L,IFLD),L=1,MXLVL)
  2060    FORMAT('(',A20,')')
@@ -229,7 +230,7 @@
 !     OUT AND CARRY ON.
 !     
  990  CONTINUE
-      IF(ME.EQ.0)THEN
+      IF(ME==0)THEN
         WRITE(6,*)' READCNTRL:  ERROR READING CNTRL HEADER INFO'
         WRITE(6,*)' BELOW IS CNTRL GRID INFO'
         WRITE(6,*)'  KGTYPE,DATSET:  ',KGTYPE,' ',DATSET
@@ -237,7 +238,7 @@
 !     GOTO 999
       exit loop999
  996  CONTINUE
-      IF(ME.EQ.0)THEN
+      IF(ME==0)THEN
         WRITE(6,*)' READCNTRL:  ERROR READING CNTRL FLD/LVL INFO'
       ENDIF
 !     
@@ -252,7 +253,7 @@
  999  CONTINUE
       IEOF=1
       CLOSE(LUNOUT)
-      IF(ME.EQ.0)THEN
+      IF(ME==0)THEN
         WRITE(6,*)' READCNTRL:  ALL GRIDS PROCESSED.  ',             &
              'CLOSED ',LUNOUT
       ENDIF

@@ -20,6 +20,7 @@
 !   02-07-29  H CHUANG - ADD UNDERGROUND FIELDS AND MEMBRANE SLP FOR WRF
 !   04-11-24  H CHUANG - ADD FERRIER'S HYDROMETEOR FIELD
 !   20-03-25  J MENG   - remove grib1
+!   20-06-30  B CUI    - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !  
 ! USAGE:    CALL MDL2P
 !   INPUT ARGUMENT LIST:
@@ -95,7 +96,7 @@
 !     VERTICAL INTERPOLATION OF EVERYTHING ELSE.  EXECUTE ONLY
 !     IF THERE'S SOMETHING WE WANT.
 !
-      IF((IGET(296).GT.0) ) THEN  !!Air Quality (Plee Oct2003)
+      IF((IGET(296)>0) ) THEN  !!Air Quality (Plee Oct2003)
 !
 !---------------------------------------------------------------------
 !
@@ -144,7 +145,7 @@
               DO L=2,LM
                 LLMH = NINT(LMH(I,J))
                 PSIGO=PTSIGO+ASIGO(LP)*(PINT(I,J,LLMH+1)-PTSIGO)
-                IF(NL1X(I,J).EQ.LP1.AND.PMID(I,J,L).GT.PSIGO)THEN
+                IF(NL1X(I,J)==LP1.AND.PMID(I,J,L)>PSIGO)THEN
                   NL1X(I,J)=L
                 ENDIF
               ENDDO
@@ -154,16 +155,16 @@
 !  WE WILL NOT CONSIDER IT UNDERGROUND AND THE INTERPOLATION
 !  WILL EXTRAPOLATE TO THAT POINT
 !
-              IF(NL1X(I,J).EQ.LP1.AND.PINT(I,J,LLMH+1).GE.PSIGO)THEN
+              IF(NL1X(I,J)==LP1.AND.PINT(I,J,LLMH+1)>=PSIGO)THEN
                 NL1X(I,J)=LM
               ENDIF
 !
-!        if(NL1X(I,J).EQ.LP1)print*,'Debug: NL1X=LP1 AT '
+!        if(NL1X(I,J)==LP1)print*,'Debug: NL1X=LP1 AT '
 !     1 ,i,j,lp
             ENDDO
           ENDDO
 !
-!mptest        IF(NHOLD.EQ.0)GO TO 310
+!mptest        IF(NHOLD==0)GO TO 310
 !
 !!$omp  parallel do
 !!$omp& private(nn,i,j,ll,fact,qsat,rhl)
@@ -180,11 +181,11 @@
 !***  HUMIDITY, CLOUD WATER/ICE, OMEGA, WINDS, AND TKE.
 !---------------------------------------------------------------------
 !
-!HC           IF(NL1X(I,J).LE.LM)THEN
+!HC           IF(NL1X(I,J)<=LM)THEN
               LLMH = NINT(LMH(I,J))
               PSIGO=PTSIGO+ASIGO(LP)*(PINT(I,J,LLMH+1)-PTSIGO) 
               APSIGO=LOG(PSIGO)
-              IF(NL1X(I,J).LE.LLMH)THEN
+              IF(NL1X(I,J)<=LLMH)THEN
 !
 !---------------------------------------------------------------------
 !          INTERPOLATE LINEARLY IN LOG(P)
@@ -204,7 +205,7 @@
               ELSE
                 ii=91
                 jj=13
-!                if(i.eq.ii.and.j.eq.jj)                                 &
+!                if(i==ii.and.j==jj)                                 &
 !                  print*,'Debug: underg extra at i,j,lp',i,j,lp
                 PL = PINT(I,J,LM-1)
                 ZL = ZINT(I,J,LM-1)
@@ -213,7 +214,7 @@
                 TMT0  = Tl - A3
                 AI    = 0.008855
                 BI    = 1.
-                IF(TMT0.LT.-20.)THEN
+                IF(TMT0<-20.)THEN
                   AI = 0.007225
                   BI = 0.9674
                 ENDIF
@@ -221,12 +222,12 @@
 !
                 RHL = QL/QSAT
 !
-                IF(RHL.GT.1.)THEN
+                IF(RHL>1.)THEN
                   RHL = 1.
                   QL  = RHL*QSAT
                 ENDIF
 !
-                IF(RHL.LT.0.01)THEN
+                IF(RHL<0.01)THEN
                   RHL = 0.01
                   QL  = RHL*QSAT
                 ENDIF
@@ -239,7 +240,7 @@
                 TMT0  = TBLO-A3
                 AI    = 0.008855
                 BI    = 1.
-                IF(TMT0.LT.-20.)THEN
+                IF(TMT0<-20.)THEN
                   AI = 0.007225
                   BI = 0.9674
                 ENDIF
@@ -258,8 +259,8 @@
 !     
 !***  TEMPERATURE
 !
-        IF(IGET(296).GT.0) THEN
-          IF(LVLS(LP,IGET(296)).GT.0)THEN
+        IF(IGET(296)>0) THEN
+          IF(LVLS(LP,IGET(296))>0)THEN
              DO J=JSTA,JEND
                DO I=1,IM
                  GRID1(I,J)=TSL(I,J)

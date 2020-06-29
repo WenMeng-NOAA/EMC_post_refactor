@@ -7,6 +7,8 @@
 !     *                                                                *
 !     ******************************************************************
 !
+! PROGRAM HISTORY LOG:
+!   2020-06-30 Bo CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !
       implicit none
 
@@ -59,7 +61,7 @@
           DO 570 KTH=2,KTHM1
       THEOLD(KTH)=(THEOLD(KTH)-THE0K)/STHEK
 !
-      IF((THEOLD(KTH)-THEOLD(KTH-1)).LT.EPS)     &
+      IF((THEOLD(KTH)-THEOLD(KTH-1))<EPS)     &
           THEOLD(KTH)=THEOLD(KTH-1)  +  EPS
 !
  570  CONTINUE

@@ -39,6 +39,7 @@
 !                         TABLE.
 !   98-06-12  T BLACK   - CONVERSION FROM 1-D TO 2-D
 !   00-01-04  JIM TUCCILLO - MPI VERSION
+!   20-06-30  B CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !
 ! USAGE:  CALL DEWPOINT( VP, TD)
 !   INPUT ARGUMENT LIST:
@@ -109,8 +110,8 @@
         RD=(RA/RGS)-RAPB
 !          THE DESIRED CHANGE IN THE GUESS
         RCH=RN/RD
-!       IF( ABS(RCH) .LT. RTEST ) GO TO 15
-        IF( ABS(RCH) .LT. RTEST ) exit loop15
+!       IF( ABS(RCH) < RTEST ) GO TO 15
+        IF( ABS(RCH) < RTEST ) exit loop15
 !          NEED MORE ITERATIONS
         RGS=RGS-RCH
 !       GO TO 10

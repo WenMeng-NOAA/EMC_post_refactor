@@ -19,6 +19,8 @@
 !   02-01-15  MIKE BALDWIN - WRF VERSION, OUTPUT IS ON MASS-POINTS
 !   05-02-23  H CHUANG - COMPUTE STRESS FOR NMM ON WIND POINTS
 !   05-07-07  BINBIN ZHOU - ADD RSM STRESS for A GRID     
+!   20-06-30  Bo CUI   - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
+
 ! USAGE:    CALL CALTAU(TAUX,TAUY)
 !   INPUT ARGUMENT LIST:
 !     NONE     
@@ -190,7 +192,7 @@
         TAUY(I,J)=RHO*ELSQR*DELVDZ*DELVDZ
 !	ii=im/2
 !	jj=(jsta+jend)/2
-!        if(i.eq.ii.and.j.eq.jj)print*,'sample tau'
+!        if(i==ii.and.j==jj)print*,'sample tau'
 !     &	,RHO,ELSQR,DELUDZ,DELVDZ  
        END DO
        END DO
@@ -207,7 +209,7 @@
 !        DZ  = D50*(ZINT(I,J,LMHK)-ZINT(I,J,LMHK+1))
 !        DZ  = ZMID(I,J,LMHK)-Z0(I,J)
         DZ=ZMID(I,J,LMHK)-(Z0(I,J)+ZINT(I,J,LMHK+1))
-        if(DZ.eq.0.0)DZ=0.2
+        if(DZ==0.0)DZ=0.2
         RDZ = 1./DZ
 !
 !        COMPUTE REPRESENTATIVE AIR DENSITY.

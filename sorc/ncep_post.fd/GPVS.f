@@ -19,6 +19,7 @@
 !   91-05-07  IREDELL
 !   94-12-30  IREDELL             EXPAND TABLE
 !   96-02-19  HONG                ICE EFFECT
+!   20-06-30 B CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !
 ! USAGE:  CALL GPVS
 !
@@ -192,7 +193,7 @@
 !-----------------------------------------------------------------------
     TR=TTP/T
 !
-    IF(T.GE.TTP)THEN
+    IF(T>=TTP)THEN
       FPVSX=PSATK*(TR**XA)*EXP(XB*(1.-TR))
     ELSE
       FPVSX=PSATK*(TR**XAI)*EXP(XBI*(1.-TR))

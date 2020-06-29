@@ -11,6 +11,7 @@
 !
 ! REVISION HISTORY
 !   2017-08-11 H Chuang   start from INITPOST_GFS_NEMS_MPIIO.f 
+!   2020-06-30 Bo CUI     modernize inequality statements from Fortran 77 to 90
 !
 ! USAGE:    CALL INITPOST_NETCDF
 !   INPUT ARGUMENT LIST:
@@ -553,7 +554,7 @@
         lonlast  = nint(glon1d(im)*gdsdegr)
 
 ! Jili Dong add support for regular lat lon (2019/03/22) start
-       if (MAPTYPE .eq. 0) then
+       if (MAPTYPE == 0) then
         if(lonstart<0.)then
          lonstart=lonstart+360.*gdsdegr
         end if
@@ -588,7 +589,7 @@
         end if
 
 ! Jili Dong add support for regular lat lon (2019/03/22) start
-       if (MAPTYPE .eq. 0) then
+       if (MAPTYPE == 0) then
         if(lonstart<0.)then
          lonstart=lonstart+360.*gdsdegr
         end if
@@ -2905,8 +2906,8 @@
             do i=1,im
               dummy(i,j)=dummy2(i,jj)
 ! dong for hgtsfc and pressfc
-              if (trim(varname) .eq. "hgtsfc" .or. trim(varname)  &
-                 .eq. "pressfc") then                                   
+              if (trim(varname) == "hgtsfc" .or. trim(varname)  &
+                 == "pressfc") then                                   
                 if(abs(dummy(i,j)-spval_netcdf_3d)<0.1)dummy(i,j)=spval
               else
                 if(abs(dummy(i,j)-spval_netcdf)<0.1)dummy(i,j)=spval

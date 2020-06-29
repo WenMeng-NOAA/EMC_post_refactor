@@ -7,6 +7,7 @@
 !     EXTRACTED FROM EXISTING CODE BY L. LOBOCKI, JULY 28, 1992
 !   01-10-22  H CHUANG - MODIFIED TO PROCESS HYBRID MODEL OUTPUT
 !   02-06-19  MIKE BALDWIN - WRF VERSION
+!   20-06-30 B CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !
 !     INPUT:
 !     ------
@@ -86,9 +87,9 @@
 !         THIS PART OF THE CODE IS LEFT FOR TESTING OTHER PARAMETERIZATION
 !         SCHEMES 
 !
-!         IF (L.GE.LMH(I,J)) GOTO 215
+!         IF (L>=LMH(I,J)) GOTO 215
 !         RQ2L(I,J)=SQRT(Q2(I,J,L))
-!         IF(Q2(I,J,L).LT.0.0)THEN
+!         IF(Q2(I,J,L)<0.0)THEN
 !           write(3,*)'NEGATIVE Q2 AT (I,J,L)=(',I,',',J,',',L,'): ',
 !                     Q2(I,J,L)
 !           STOP

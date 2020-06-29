@@ -11,6 +11,7 @@
 !
 ! REVISION HISTORY
 !   2020-02-04 W Meng   start from INITPOST_GFS_NETCDF.f 
+!   2020-06-30 Bo CUI   Modernize inequality statements from Fortran 77 to 90
 !
 ! USAGE:    CALL INITPOST_GFS_NETCDF_PARA
 !   INPUT ARGUMENT LIST:
@@ -484,7 +485,7 @@
         end if
 
 ! Jili Dong add support for regular lat lon (2019/03/22) start
-       if (MAPTYPE .eq. 0) then
+       if (MAPTYPE == 0) then
         if(lonstart<0.)then
          lonstart=lonstart+360.*gdsdegr
         end if

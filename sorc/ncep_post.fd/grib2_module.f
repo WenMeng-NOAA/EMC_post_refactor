@@ -10,6 +10,8 @@
 !                              are defined in xml file
 !   March, 2015    Lin Gan    Replace XML file with flat file implementation
 !                              with parameter marshalling
+!   June,  2020    Bo CUI  - Modernize inequality statements from Fortran 77 to 90
+
 !------------------------------------------------------------------------
   use xml_perl_data, only: param_t,paramset_t
 !
@@ -169,7 +171,7 @@
     if(first_grbtbl) then
       fl_nametbl='params_grib2_tbl_new'
       call open_and_read_4dot2( fl_nametbl, ierr )
-      if ( ierr .ne. 0 ) then
+      if ( ierr /= 0 ) then
         print*, 'Couldnt open table file - return code was ',ierr
         call mpi_abort()
       endif
@@ -296,7 +298,7 @@
            nlvl=fld_info(i)%lvl
            fldlvl1=fld_info(i+snfld_pe(me+1)-1)%lvl1
            fldlvl2=fld_info(i+snfld_pe(me+1)-1)%lvl2
-           if(trim(pset%param(nprm)%table_info).eq.'NCEP') then
+           if(trim(pset%param(nprm)%table_info)=='NCEP') then
              itblinfo=1
            else
              itblinfo=0
@@ -385,7 +387,7 @@
         fldlvl2=fld_info(i+snfld_pe(me+1)-1)%lvl2
         ntrange=fld_info(i+snfld_pe(me+1)-1)%ntrange
         leng_time_range_stat=fld_info(i+snfld_pe(me+1)-1)%tinvstat
-        if(trim(pset%param(nprm)%table_info).eq.'NCEP') then
+        if(trim(pset%param(nprm)%table_info)=='NCEP') then
           itblinfo=1
         else
           itblinfo=0
@@ -610,9 +612,9 @@
        if(trim(pset%gen_proc)=='gefs') then
          listsec1(2)=2
 ! Settings below for control (1 or 2) vs perturbed (3 or 4) ensemble forecast
-         if(e1_type.eq.1.or.e1_type.eq.2) then
+         if(e1_type==1.or.e1_type==2) then
            listsec1(13)=3
-         elseif(e1_type.eq.3.or.e1_type.eq.4) then
+         elseif(e1_type==3.or.e1_type==4) then
            listsec1(13)=4
          endif
          print *, "After g2sec1 call we need to set listsec1(2) = ",listsec1(2)
@@ -634,7 +636,7 @@
          trim(pset%param(nprm)%pname)=='vgrd'))
        call getgds(ldfgrd,igdsmaxlen,igdtlen,igds,igdstmpl)
        idefnum=1
-       ideflist=0     !Used if igds(3) .ne. 0. Dummy array otherwise
+       ideflist=0     !Used if igds(3) /= 0. Dummy array otherwise
 !
        call addgrid(cgrib,max_bytes,igds,igdstmpl,igdtlen,ideflist,idefnum,ierr)
 !
@@ -1115,13 +1117,13 @@
       ibs = 0
       ids = 0
       range = GMAX - GMIN
-!      IF ( range .le. 0.00 ) THEN
-      IF ( range .le. 1.e-30 ) THEN
+!      IF ( range <= 0.00 ) THEN
+      IF ( range <= 1.e-30 ) THEN
         nbits = 8
         return
       END IF
 !*
-      IF ( scl .eq. 0.0 ) THEN
+      IF ( scl == 0.0 ) THEN
           nbits = 8
           RETURN
       ELSE IF ( scl  >  0.0 ) THEN
@@ -1133,7 +1135,7 @@
             return
           endif
 
-          IF ( range .lt. 1.00 ) ipo = ipo - 1
+          IF ( range < 1.00 ) ipo = ipo - 1
           po = float(ipo) - scl + 1.
           ids = - INT ( po )
           rr = range * 10. ** ( -po )
@@ -1173,7 +1175,7 @@
             if (bmap(i1)) exit
           enddo
  !        I1=1
- !        DO WHILE(I1.LE.LEN.AND..not.BMAP(I1))
+ !        DO WHILE(I1<=LEN.AND..not.BMAP(I1))
  !          I1=I1+1
  !        ENDDO
           IF(I1 <= LEN) THEN
@@ -1283,7 +1285,7 @@
        ifield3(18) = 64
 !
 !** Mercator
-      ELSE IF(MAPTYPE.EQ.3)THEN !Mercator
+      ELSE IF(MAPTYPE==3)THEN !Mercator
        igds(5)=10
        ifield3len=22
        ifield3=0

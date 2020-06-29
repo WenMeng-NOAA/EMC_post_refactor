@@ -8,6 +8,7 @@
 !   .
 !
 ! PROGRAM HISTORY LOG:
+!   2020-06-30  Bo CUI - MODERNIZE INEQUALITY STATEMENTS
 !
       
      use ctlblk_mod, only : im,jm,num_procs,me,jsta,jend
@@ -45,7 +46,7 @@
            ibufsend(ij)=GRID1(i,j)
         enddo
      enddo
-     if(ij .ne. RECVCOUNTS(me+1)) then
+     if(ij /= RECVCOUNTS(me+1)) then
         write(*,*) 'Error: send account is not equal to receive account',me,ij,RECVCOUNTS(me+1)
      endif
   

@@ -34,6 +34,7 @@
 !   15-07-04  SARAH LU     - CORRECT PW INTEGRATION FOR AOD (17)
 !   15-07-10  SARAH LU     - UPDATE TO CALCULATE ASYMETRY PARAMETER
 !   19-07-25  Li(Kate) Zhang - MERGE SARHA LU's update for FV3-Chem
+!   20-06-30  Bo CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !     
 ! USAGE:    CALL CALPW(PW)
 !   INPUT ARGUMENT LIST:
@@ -160,7 +161,7 @@
 !$omp  parallel do private(i,j)
           DO J=JSTA,JEND
             DO I=1,IM
-              IF (T(I,J,L) .GE. TFRZ) THEN
+              IF (T(I,J,L) >= TFRZ) THEN
                 Qdum(I,J) = 0.
               ELSE
                 Qdum(I,J) = QQW(I,J,L) + QQR(I,J,L)

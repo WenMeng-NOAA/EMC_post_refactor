@@ -35,6 +35,7 @@
 !   01-10-25  H CHUANG     - MODIFIED TO PROCESS HYBRID MODEL OUTPUT
 !   02-01-15  MIKE BALDWIN - WRF VERSION
 !   19-10-30  Bo CUI - REMOVE "GOTO" STATEMENT
+!   20-06-30 Bo CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !     
 ! USAGE:    CALL FRZLVL(ZFRZ,RHFRZ)
 !   INPUT ARGUMENT LIST:
@@ -124,7 +125,7 @@
 ! GFS analysis does not have flux file to retrieve TSFC from	 
 	  TSFC=T(I,J,LM)+D0065*(ZMID(I,J,LM)-HTSFC-2.0)
 	 END IF  
-         IF (TSFC.LE.TFRZ) THEN
+         IF (TSFC<=TFRZ) THEN
 !            ZFRZ(I,J) = HTSFC+(TSFC-TFRZ)/D0065
 	    ZFRZ(I,J) = HTSFC+2.0+(TSFC-TFRZ)/D0065
 !	    IF(SM(I,J)/=SPVAL .AND. QZ0(I,J)/=SPVAL .AND.      &
@@ -160,8 +161,8 @@
 !        OTHERWISE, LOCATE THE FREEZING LEVEL ALOFT.
 !
          DO 10 L = LLMH,1,-1
-            IF (T(I,J,L).LE.TFRZ) THEN
-               IF (L.LT.LLMH) THEN
+            IF (T(I,J,L)<=TFRZ) THEN
+               IF (L<LLMH) THEN
                   DELZ = ZMID(I,J,L)-ZMID(I,J,L+1)
                   ZL   = ZMID(I,J,L+1)
                   DELT = T(I,J,L)-T(I,J,L+1)

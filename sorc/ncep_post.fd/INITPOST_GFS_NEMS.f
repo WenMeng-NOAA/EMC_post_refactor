@@ -19,6 +19,7 @@
 !   2015-03-16 S. Moorthi  adding gocart_on option
 !   2015-03-18 S. Moorthi  Optimization including threading
 !   2015-08-17 S. Moorthi  Add TKE for NEMS/GSM
+!   2020-06-30 Bo CUI      Modernize inequality statements from Fortran 77 to 90
 !
 ! USAGE:    CALL INIT
 !   INPUT ARGUMENT LIST:
@@ -390,7 +391,7 @@
 !        end if
 !      end if
       
-!       if(jsta.le.594.and.jend.ge.594)print*,'gdlon(120,594)= ',
+!       if(jsta<=594.and.jend>=594)print*,'gdlon(120,594)= ',
 !     + gdlon(120,594)
 
       
@@ -499,7 +500,7 @@
 !      call ext_int_get_dom_ti_integer(DataHandle,'RESTARTBIN',itmp
 !     + ,1,ioutcount,istatus)
       
-!      IF(itmp .LT. 1)THEN
+!      IF(itmp < 1)THEN
 !        RESTRT=.FALSE.
 !      ELSE
 !        RESTRT=.TRUE.

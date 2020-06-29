@@ -14,6 +14,7 @@
 !   01_27_2012  Jun Wang - INITIAL CODE
 !   03_10_2015  Lin Gan  - Replace XML file with flat file implementation
 !   10_30_2019  Bo CUI   - REMOVE "GOTO" STATEMENT
+!   20-06-30 Bo CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 
 !     
 ! USAGE:    CALL READCNTRL_XML(kth,kpv,pv,th)
@@ -65,7 +66,7 @@
 !******************************************************************************
 !     START READCNTRL_XML HERE.
 !     
-!      IF(ME.EQ.0)THEN
+!      IF(ME==0)THEN
 !        WRITE(6,*)'READCNTRL_XML:  POSTING FCST HR ',IFHR,' FROM ',         &
 !             IHRST,'UTC ',SDAT(1),'-',SDAT(2),'-',SDAT(3),' RUN'
 !      ENDIF
@@ -179,12 +180,12 @@
 !     
 !     ECHO OUTPUT FIELDS/LEVELS TO 6.
 !
-!      IF(ME.EQ.0)THEN
+!      IF(ME==0)THEN
 !        WRITE(6,*)'BELOW ARE FIELD/LEVEL/SMOOTHING ',       &
 !             'SPECIFICATIONS.,NFLD=',NFLD,'MXLVL=',MXLVL,'nrecout=',nrecout
 !      ENDIF
 !      DO 50 IFLD = 1,NFLD
-!        IF(ME.EQ.0)THEN
+!        IF(ME==0)THEN
 !         i=IAVBLFLD(IFLD)
 !         write(0,*)'readxml,ifld=',ifld,'iget(',IDENT(ifld),')=',iget(ident(ifld)),'iavbl=',IAVBLFLD(iget(ident(ifld))),'postvar=',trim(pset%param(i)%pname),  &
 !             trim(pset%param(i)%fixed_sfc1_type),'lvls=',LVLS(:,ifld)

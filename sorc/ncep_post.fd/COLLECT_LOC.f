@@ -10,6 +10,7 @@
 !
 ! PROGRAM HISTORY LOG:
 !   00-01-06  TUCCILLO - ORIGINAL
+!   20-06-30  Bo CUI   - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !
 ! USAGE:    CALL COLLECT(A)
 !   INPUT ARGUMENT LIST:
@@ -43,7 +44,7 @@
       real, dimension(im,jm), intent(out) :: b
       integer ierr
 !
-      if ( num_procs .le. 1 ) then
+      if ( num_procs <= 1 ) then
          b = a
       else
          call mpi_gatherv(a(1,jsta),icnt(me),MPI_REAL,   &

@@ -27,7 +27,8 @@
 !     ******************************************************************
 !
 ! PROGRAM HISTORY LOG:
-!   19-10-30  Bo CUI - REMOVE "GOTO" STATEMENT
+!   19-10-30 Bo CUI - REMOVE "GOTO" STATEMENT
+!   20-06-30 Bo CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       implicit none
@@ -54,8 +55,8 @@
 !
   
       loop700: do
-!     IF(NOLD.EQ.3) GO TO 700
-      IF(NOLD.EQ.3) exit loop700
+!     IF(NOLD==3) GO TO 700
+      IF(NOLD==3) exit loop700
 !-----------------------------------------------------------------------
       K=3
 !
@@ -71,8 +72,8 @@
       Q(K-1)=-DEN*DXR
 !
       K=K+1
-!     IF(K.LT.NOLD) GO TO 100
-      IF(K.LT.NOLD) cycle loop100
+!     IF(K<NOLD) GO TO 100
+      IF(K<NOLD) cycle loop100
       exit loop100
       enddo loop100
 !-----------------------------------------------------------------------
@@ -84,8 +85,8 @@
  200  Y2(K)=P(K-1)+Q(K-1)*Y2(K+1)
 !
       K=K-1
-!     IF(K.GT.1) GO TO 200
-      IF(K.GT.1) cycle loop200
+!     IF(K>1) GO TO 200
+      IF(K>1) cycle loop200
       exit loop200
       enddo loop200
 !-----------------------------------------------------------------------
@@ -99,8 +100,8 @@
       loop500: do
       loop450: do
       DO 400 K2=2,NOLD
-!     IF(XOLD(K2).LE.XK) GO TO 400
-      IF(XOLD(K2).LE.XK) cycle         
+!     IF(XOLD(K2)<=XK) GO TO 400
+      IF(XOLD(K2)<=XK) cycle         
       KOLD=K2-1
 !     GO TO 450
       exit loop450
@@ -111,10 +112,10 @@
 !
       exit loop450
       enddo loop450
-!450  IF(K1.EQ.1)   GO TO 500
-!     IF(K.EQ.KOLD) GO TO 550
- 450  IF(K1.EQ.1)   exit loop500
-      IF(K.EQ.KOLD) exit loop550
+!450  IF(K1==1)   GO TO 500
+!     IF(K==KOLD) GO TO 550
+ 450  IF(K1==1)   exit loop500
+      IF(K==KOLD) exit loop550
 !
       exit loop500
       enddo loop500
@@ -144,8 +145,8 @@
       exit loop600
       enddo loop600
  600  K1=K1+1
-!     IF(K1.LE.NNEW) GO TO 300
-      IF(K1.LE.NNEW) cycle loop300
+!     IF(K1<=NNEW) GO TO 300
+      IF(K1<=NNEW) cycle loop300
       exit loop300
       enddo loop300
 !-----------------------------------------------------------------------

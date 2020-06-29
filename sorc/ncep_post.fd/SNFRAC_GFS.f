@@ -1,5 +1,7 @@
       SUBROUTINE SNFRAC_GFS(SNEQV,IVEG,SNCOVR)
 !
+! PROGRAM HISTORY LOG:
+!   2020-06-30 Bo CUI - Modernize inequality statements from Fortran 77 to 90
 !- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
        implicit none
 !      
@@ -27,7 +29,7 @@
 ! ----------------------------------------------------------------------
 ! SNUP IS VEG-CLASS DEPENDENT SNOWDEPTH THRESHHOLD ABOVE WHICH SNOCVR=1.
 ! ----------------------------------------------------------------------
-        IF (SNEQV .LT. SNUP(IVEG)) THEN
+        IF (SNEQV < SNUP(IVEG)) THEN
           RSNOW = SNEQV/SNUP(IVEG)
           SNCOVR = 1. - (EXP(-SALP*RSNOW) - RSNOW*EXP(-SALP))
         ELSE

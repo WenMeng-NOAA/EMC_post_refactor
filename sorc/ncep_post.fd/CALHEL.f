@@ -39,6 +39,7 @@
 !   05=02-25  H CHUANG        - ADD COMPUTATION FOR ARW A GRID
 !   05-07-07  BINBIN ZHOU     - ADD RSM FOR A GRID  
 !   19-10-30  Bo CUI          - REMOVE "GOTO" STATEMENT
+!   20-06-30 Bo CUI           - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !   
 ! USAGE:    CALHEL(UST,VST,HELI)
 !   INPUT ARGUMENT LIST:
@@ -350,7 +351,7 @@
             VSHR6(I,J) = VMEAN5 - VMEAN1
 
             DENOM = USHR6(I,J)*USHR6(I,J)+VSHR6(I,J)*VSHR6(I,J)
-            IF (DENOM .NE. 0.0) THEN
+            IF (DENOM /= 0.0) THEN
               UST(I,J) = UMEAN6 + (7.5*VSHR6(I,J)/SQRT(DENOM))
               VST(I,J) = VMEAN6 - (7.5*USHR6(I,J)/SQRT(DENOM))
             ELSE

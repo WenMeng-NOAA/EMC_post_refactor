@@ -7,6 +7,7 @@
 ! program log:
 !   March, 2015    Lin Gan    Initial Code
 !   July,  2016    J. Carley  Clean up prints 
+!   June,  2020     Bo CUI - Modernize inequality statements from Fortran 77 to 90
 !   
 !------------------------------------------------------------------------
         implicit none
@@ -212,7 +213,7 @@
 !
             allocate( paramset(i)%param(j)%scale_fact_fixed_sfc1(1))
 
-            if (cc .gt. 0) then 
+            if (cc > 0) then 
 !  
               deallocate( paramset(i)%param(j)%scale_fact_fixed_sfc1)
 
@@ -228,7 +229,7 @@
 
             read(22,*)level_array_count
             allocate( paramset(i)%param(j)%level(1))
-            if (level_array_count .gt. 0) then
+            if (level_array_count > 0) then
               deallocate( paramset(i)%param(j)%level)
               allocate( paramset(i)%param(j)%level(level_array_count))
               read(22,*)paramset(i)%param(j)%level
@@ -241,7 +242,7 @@
               call filter_char_inp(paramset(i)%param(j)%fixed_sfc2_type)
             read(22,*)cv
          allocate( paramset(i)%param(j)%scale_fact_fixed_sfc2(1))
-            if (cv .gt. 0) then
+            if (cv > 0) then
               deallocate(paramset(i)%param(j)%scale_fact_fixed_sfc2)
               allocate(paramset(i)%param(j)%scale_fact_fixed_sfc2(cv))
               read(22,*)paramset(i)%param(j)%scale_fact_fixed_sfc2
@@ -251,7 +252,7 @@
             endif
 
             read(22,*)level2_array_count
-            if (level2_array_count .gt. 0) then
+            if (level2_array_count > 0) then
               allocate(paramset(i)%param(j)%level2(level2_array_count))
               read(22,*)paramset(i)%param(j)%level2
             else
@@ -276,7 +277,7 @@
             read(22,*)paramset(i)%param(j)%scale_val_2nd_wvlen
             read(22,*)scale_array_count
             allocate(paramset(i)%param(j)%scale(1))
-            if (scale_array_count .gt. 0) then
+            if (scale_array_count > 0) then
               deallocate(paramset(i)%param(j)%scale)
               allocate(paramset(i)%param(j)%scale(scale_array_count))
               read(22,*)paramset(i)%param(j)%scale
@@ -309,7 +310,7 @@
 
         subroutine filter_char_inp (inpchar)
           character, intent(inout)    :: inpchar
-          if (inpchar .eq. "?") then
+          if (inpchar == "?") then
             inpchar = ""
           endif
         end subroutine filter_char_inp

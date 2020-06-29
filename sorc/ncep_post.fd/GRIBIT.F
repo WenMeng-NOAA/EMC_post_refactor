@@ -17,6 +17,7 @@
 !               NO IMPACTS ON ON-HOUR FORECAST
 !   07-29-09  J HALLEY GOTWAY - MODIFY HANDLING OF OFF-HOUR FORECASTS TO
 !                MAKE USE OF THE 1/2 AND 1/4 HOUR TIME RANGE INDICATORS.
+!   20-06-30  Bo CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !     
 ! USAGE:    CALL GRIBIT(IFLD,ILVL,GRID,IMOUT,JMOUT)
 !   INPUT ARGUMENT LIST:
@@ -199,8 +200,8 @@
          ADAY0      = IDD
          AGMT0      = IHRST
          ID(01)     = 28
-         IF ( (ID(2).NE.129) .AND. (ID(2).NE.130) .AND.         &
-	      (ID(2).NE.133) .AND.  (ID(2).NE.141) ) THEN
+         IF ( (ID(2)/=129) .AND. (ID(2)/=130) .AND.         &
+	      (ID(2)/=133) .AND.  (ID(2)/=141) ) THEN
              ID(2)     = 2
          END IF 
 
@@ -222,7 +223,7 @@
 !    ASSUMING ID(18-20), (P1, P2, TIME RANGE INDICATOR) 
 !    ARE PASSED IN CORRECTLY IF NOT AN INSTANTANEOUS FIELD
 !   
-         IF (ID(20).EQ.0) THEN
+         IF (ID(20)==0) THEN
           ID(18)     = IFHR 
           ID(19)     = 0
          ENDIF
@@ -292,7 +293,7 @@
 !    FCST TIME UNIT VALUE.  FOR ANY FIELD OTHER THAN AN INSTANTANEOUS FIELD,
 !    ASSUME ID(18-20), ARE PASSED IN CORRECTLY.
 
-	 IF(IFMIN .GE. 1)THEN
+	 IF(IFMIN >= 1)THEN
 !	   ID(17)     = 0
 !    COMPUTE THE TOTAL FORECAST MINUTES.
 	   TOTMIN=IFHR*60+IFMIN
@@ -373,14 +374,14 @@
 !     DONOT SET PARAMETER IF PRECIP TYPE, SINCE THERE ARE
 !     4 PARAMETER NUMBERS FOR THE SAME IFLD
 !
-!         IF (ID(8).LT.140.OR.ID(8).GT.143) ID(8) = IQ(IDENT(IFLD))
+!         IF (ID(8)<140.OR.ID(8)>143) ID(8) = IQ(IDENT(IFLD))
 !   05-08-24  GEOFF MANIKIN - ADDED IN DOMINANT PRECIP TYPE
 !                              TO PTYPE IF STATEMENT
-         IF (ID(8).LT.140.OR.ID(8).GT.143) THEN
-           IF (ID(8).LT.203.OR.ID(8).GT.206.OR.ID(2).NE.129) THEN
+         IF (ID(8)<140.OR.ID(8)>143) THEN
+           IF (ID(8)<203.OR.ID(8)>206.OR.ID(2)/=129) THEN
 !   15-12-04  WM LEWIS ADDED CONDITION TO ALLOW FOR WRF_PARM.CNTRL
 !             DIRECTION OF SATELLITE CHANNEL SELECTION USING ILVL SWITCHES
-             IF (ID(8).LT.168.OR.ID(8).GT.244) THEN
+             IF (ID(8)<168.OR.ID(8)>244) THEN
                ID(8)=IQ(IDENT(IFLD))
              ENDIF
             ENDIF
@@ -392,26 +393,26 @@
 	 IF (MODELNAME=='GFS' .AND. ID(8)==2)ID(8) = 1
 	 
 
-         IF (ID(9).EQ.0) ID(9) = IS(IDENT(IFLD))
+         IF (ID(9)==0) ID(9) = IS(IDENT(IFLD))
 !     
 !        SET VALUE OF LEVEL IF ON PRESSURE OR ETA SURFACE.
 !        OTHERWISE, WE ASSUME ID(10) AND (11) ARE SET 
 !        APPROPRIATELY PRIOR TO ENTERING GRIBIT.
 !     
-         IF (ID(9).EQ.100)  THEN
+         IF (ID(9)==100)  THEN
             ISVALUE = NINT(SPL(ILVL)*D01)
             ID(10) = 0
             ID(11) = ISVALUE
-!MEB     ELSEIF (ID(9).EQ.119) THEN
+!MEB     ELSEIF (ID(9)==119) THEN
 !MEB        ISVALUE = ILVL
 !MEB        ISVALUE = NINT(AETA(ILVL)*10000.)
 !
 !   TKE IS ON THE ETA INTERFACE AT THE BOTTOM OF THE LAYER ILVL
 !
-!MEB        IF (ID(8).EQ.158) ISVALUE = NINT(ETA(ILVL+1)*10000.)
+!MEB        IF (ID(8)==158) ISVALUE = NINT(ETA(ILVL+1)*10000.)
 !MEB        ID(10) = 0
 !MEB        ID(11) = ISVALUE
-         ELSEIF (ID(9) .EQ. 109) THEN
+         ELSEIF (ID(9) == 109) THEN
 #ifdef GSDRAPR
             IF(MODELNAME == 'RAPR') ID(9) = 107
 #else
@@ -469,7 +470,7 @@
 !      DO I=1,IMOUT
       DO J=1,JM
       DO I=1,IM
-        IF(ABS(GRIDO(I,J)-SPVAL).GT.SMALL) THEN
+        IF(ABS(GRIDO(I,J)-SPVAL)>SMALL) THEN
              ibmap(i,j) = 1
              ibitm = ibitm+1
         ELSE
@@ -481,7 +482,7 @@
 !
 !        ID(7) =0 IF NO BMS SECTION, =1 IF BMS INCLUDED
 !
-      IF (IBITM.EQ.IJOUT) THEN
+      IF (IBITM==IJOUT) THEN
         ID(7) = 0
         IBM = 0
       ELSE
@@ -527,7 +528,7 @@
       IGFLAG = 1  ! set to 1 so that IGDS is defined here instead of w3lib
       IGRID  = ID(5)
       print*,'GRID NUMBER = ',IGRID
-      IF (IGRID.EQ.26) IGRID=6
+      IF (IGRID==26) IGRID=6
 
 ! IF INPUT IS GRIB, THE IGDS WERE MADE IN INITPOST
       print*,'IOFORM in GRIBIT =', IOFORM
@@ -536,7 +537,7 @@
          IGDS(K) = 0
  20    CONTINUE
       END IF 
-      IF(MAPTYPE.EQ.1)THEN  !Lambert Conformal
+      IF(MAPTYPE==1)THEN  !Lambert Conformal
          IGDS( 1) = 0
          IGDS( 2) = 255
          IGDS( 3) = 3
@@ -560,7 +561,7 @@
          IGDS(15) = TRUELAT2
          IGDS(16) = TRUELAT1
 
-         IF (TRUELAT1 .LT. 0) THEN
+         IF (TRUELAT1 < 0) THEN
            IGDS(17) = -90000
            IGDS(18) = 0
          ELSE
@@ -568,7 +569,7 @@
            IGDS(18) = 0
          END IF
 
-      ELSE IF(MAPTYPE.EQ.2)THEN  !Polar stereographic
+      ELSE IF(MAPTYPE==2)THEN  !Polar stereographic
          IGDS( 1) = 0
          IGDS( 2) = 255
          IGDS( 3) = 5
@@ -581,13 +582,13 @@
          IGDS( 9) = STANDLON
          IGDS(10) = NINT (DXVAL/PSMAPF)
          IGDS(11) = NINT (DYVAL/PSMAPF)
-         IF (TRUELAT1 .LT. 0) THEN
+         IF (TRUELAT1 < 0) THEN
             IGDS(12) = 128
          ELSE
             IGDS(12) = 0
          ENDIF
          IGDS(13) = 64
-      ELSE IF(MAPTYPE.EQ.3)THEN  !Mercator
+      ELSE IF(MAPTYPE==3)THEN  !Mercator
          IGDS( 1) = 0
          IGDS( 2) = 255
          IGDS( 3) = 1
@@ -602,7 +603,7 @@
          IGDS(12) = DXVAL 
          IGDS(13) = TRUELAT1 
          IGDS(14) = 64 
-      ELSE IF(MAPTYPE.EQ.203)THEN  !ARAKAWA STAGGERED E-GRID
+      ELSE IF(MAPTYPE==203)THEN  !ARAKAWA STAGGERED E-GRID
          IGDS( 1) = 0
          IGDS( 2) = 255
          IGDS( 3) = 203 
@@ -617,7 +618,7 @@
          IGDS(12) = DYVAL
          IGDS(13) = 64 
          IGDS(14) = 0
-      ELSE IF(MAPTYPE.EQ.205)THEN  !ARAKAWA STAGGERED B-GRID
+      ELSE IF(MAPTYPE==205)THEN  !ARAKAWA STAGGERED B-GRID
          IGDS( 1) = 0
          IGDS( 2) = 255
          IGDS( 3) = 205 
@@ -643,7 +644,7 @@
          IGDS(11) = DXVAL
          IGDS(12) = DYVAL
          IGDS(13) = 64
-      ELSE IF(MAPTYPE.EQ.6)THEN  !Lat-Lon A grid
+      ELSE IF(MAPTYPE==6)THEN  !Lat-Lon A grid
        IF(STANDLON==CENLON)THEN !regular latlon
          IGDS( 1) = 0
          IGDS( 2) = 255
@@ -678,7 +679,7 @@
        END IF   	 
 ! Only define Gaussian grid again if it is not defined in
 ! INITPOST_GFS
-      ELSE IF(MAPTYPE.EQ.4 .AND. IGDS(4)==0)THEN  !Gaussian grid
+      ELSE IF(MAPTYPE==4 .AND. IGDS(4)==0)THEN  !Gaussian grid
          print*,'set up IGDS in GRIBIT for Gaussian grid'
          IGDS( 1) = 0
          IGDS( 2) = 255
@@ -700,7 +701,7 @@
          IGDS(18) = 0	 
 ! Only define Latlon grid again if it is not defined in
 ! INITPOST_GFS
-      ELSE IF(MAPTYPE.EQ.0 .AND. IGDS(4)==0)THEN  !Latlon grid
+      ELSE IF(MAPTYPE==0 .AND. IGDS(4)==0)THEN  !Latlon grid
          print*,'set up IGDS in GRIBIT for Latlon grid'
          IGDS( 1) = 0
          IGDS( 2) = 255
@@ -746,7 +747,7 @@
 !           IGDS(18) = LONGITUDE OF SOUTH POLE (MILLIDEGREES)
 !
       ICOMP  = 1
-!      IF (INDEX(PROJ,'LOLA').NE.0) ICOMP = 0
+!      IF (INDEX(PROJ,'LOLA')/=0) ICOMP = 0
       IF(IGDS(8)==128)ICOMP = 0
 !      print*,'ICOMP in GRIBIT=',ICOMP
       IBFLAG = 0
@@ -773,7 +774,7 @@
 !
 !!      KBUF(12)=CHAR(2)
 !
-      IF (IER.NE.0) THEN
+      IF (IER/=0) THEN
          WRITE(6,1040) IER,FIELD(IFLD)
  1040    FORMAT('GRIBIT:  ***W3FI72 ERROR IER=',I8,' FOR ',A20)
          WRITE(6,*)'GRIBIT:  DID NOT POST THIS FIELD'
@@ -803,36 +804,36 @@
 	 CALL GETENV('IPVOUT',IPVOUT)
 	 CALL GETENV('D3DOUT',D3DOUT)
          KDAT = INDEX(DATSET,' ') -1
-         IF (KDAT.LE.0) KDAT = LEN(DATSET)
+         IF (KDAT<=0) KDAT = LEN(DATSET)
          KENV = INDEX(ENVAR,' ') -1
-         IF (KENV.LE.0) KENV = LEN(ENVAR)
+         IF (KENV<=0) KENV = LEN(ENVAR)
          KTHR = INDEX(RESTHR,' ') -1
-         IF (KTHR.LE.0) KTHR = LEN(RESTHR)
+         IF (KTHR<=0) KTHR = LEN(RESTHR)
 !     
 !        CONSTRUCT FULL PATH-FILENAME FOR OUTPUT FILE
          IF(MODELNAME=='GFS')THEN
-          IF(D3DOUT(1:4).NE.BLANK .AND. &
-             ((IGET(354).GT.0).OR.(IGET(355).GT.0).OR.  &
-             (IGET(356).GT.0).OR.(IGET(357).GT.0).OR.  &
-             (IGET(358).GT.0).OR.(IGET(359).GT.0).OR.  &
-             (IGET(360).GT.0).OR.(IGET(361).GT.0).OR.  &
-             (IGET(362).GT.0).OR.(IGET(363).GT.0).OR.  &
-             (IGET(364).GT.0).OR.(IGET(365).GT.0).OR.  &
-             (IGET(366).GT.0).OR.(IGET(367).GT.0).OR.  &
-             (IGET(368).GT.0).OR.(IGET(369).GT.0).OR.  &
-             (IGET(370).GT.0).OR.(IGET(371).GT.0).OR.  &
-             (IGET(372).GT.0).OR.(IGET(373).GT.0).OR.  &
-             (IGET(374).GT.0).OR.(IGET(375).GT.0)))THEN
+          IF(D3DOUT(1:4)/=BLANK .AND. &
+             ((IGET(354)>0).OR.(IGET(355)>0).OR.  &
+             (IGET(356)>0).OR.(IGET(357)>0).OR.  &
+             (IGET(358)>0).OR.(IGET(359)>0).OR.  &
+             (IGET(360)>0).OR.(IGET(361)>0).OR.  &
+             (IGET(362)>0).OR.(IGET(363)>0).OR.  &
+             (IGET(364)>0).OR.(IGET(365)>0).OR.  &
+             (IGET(366)>0).OR.(IGET(367)>0).OR.  &
+             (IGET(368)>0).OR.(IGET(369)>0).OR.  &
+             (IGET(370)>0).OR.(IGET(371)>0).OR.  &
+             (IGET(372)>0).OR.(IGET(373)>0).OR.  &
+             (IGET(374)>0).OR.(IGET(375)>0)))THEN
               FNAME = D3DOUT
               PRINT*,' FNAME FROM D3DOUT=',FNAME
-          ELSE IF(IPVOUT(1:4).NE.BLANK .AND.  &
-             ((IGET(332).GT.0).OR.(IGET(333).GT.0).OR.  &
-             (IGET(334).GT.0).OR.(IGET(335).GT.0).OR.  &
-             (IGET(351).GT.0).OR.(IGET(352).GT.0).OR.  &
-             (IGET(353).GT.0).OR.(IGET(378).GT.0)))THEN
+          ELSE IF(IPVOUT(1:4)/=BLANK .AND.  &
+             ((IGET(332)>0).OR.(IGET(333)>0).OR.  &
+             (IGET(334)>0).OR.(IGET(335)>0).OR.  &
+             (IGET(351)>0).OR.(IGET(352)>0).OR.  &
+             (IGET(353)>0).OR.(IGET(378)>0)))THEN
               FNAME = IPVOUT
               PRINT*,' FNAME FROM IPVOUT=',FNAME
-          ELSE IF(PGBOUT(1:4).NE.BLANK)THEN
+          ELSE IF(PGBOUT(1:4)/=BLANK)THEN
             FNAME = PGBOUT
             PRINT*,' FNAME FROM PGBOUT=',FNAME
           ELSE
@@ -843,12 +844,12 @@
               FNAME = DATSET(1:KDAT) //'.GrbF'// CFHOUR
               print *,' FNAME=',FNAME
           END IF
-!         IF(MODELNAME=='GFS'.AND.PGBOUT(1:4).NE.BLANK)THEN
+!         IF(MODELNAME=='GFS'.AND.PGBOUT(1:4)/=BLANK)THEN
 !	   FNAME = PGBOUT
 !	   PRINT*,' FNAME FROM PGBOUT=',FNAME	        
 !     
-         ELSEIF (ENVAR(1:4).EQ.BLANK.AND.RESTHR(1:4).EQ.BLANK) THEN
-	  IF(IFMIN .GE. 1)THEN
+         ELSEIF (ENVAR(1:4)==BLANK.AND.RESTHR(1:4)==BLANK) THEN
+	  IF(IFMIN >= 1)THEN
 	   WRITE(DESCR2,1011) IHR
 	   WRITE(DESCR3,1011) IFMIN
 	   FNAME = DATSET(1:KDAT) // DESCR2  //':'// DESCR3(1:2)
@@ -860,7 +861,7 @@
            FNAME = DATSET(1:KDAT) //'.GrbF'// CFHOUR
       print *,' FNAME=',FNAME
 !
-!          IF(IHR.LT.100)THEN
+!          IF(IHR<100)THEN
 !           WRITE(DESCR2,1011) IHR
 !          ELSE
 !           WRITE(DESCR2,1013) IHR
@@ -870,10 +871,10 @@
 !          FNAME = DATSET(1:KDAT) // DESCR2
 	  END IF
 !
-         ELSEIF(ENVAR(1:4).EQ.BLANK.AND.RESTHR(1:4).NE.BLANK) THEN
-	  IF(IFMIN .GE. 1)THEN
+         ELSEIF(ENVAR(1:4)==BLANK.AND.RESTHR(1:4)/=BLANK) THEN
+	  IF(IFMIN >= 1)THEN
 	   WRITE(DESCR3,1012) IFMIN
-           IF (IHR.LT.100) THEN
+           IF (IHR<100) THEN
 	      WRITE(DESCR2,1012) IHR
               FNAME = DATSET(1:KDAT) // DESCR2(1:2)  //':'// DESCR3(1:2) &  
       	         //'.'// RESTHR
@@ -883,7 +884,7 @@
       	         //'.'// RESTHR
            ENDIF
 	  ELSE
-           IF (IHR.LT.100) THEN
+           IF (IHR<100) THEN
              WRITE(DESCR2,1012) IHR
              FNAME = DATSET(1:KDAT) // DESCR2(1:2)  //'.'// RESTHR
            ELSE
@@ -892,9 +893,9 @@
            ENDIF
           end if
          ELSE
-	  IF(IFMIN .GE. 1)THEN
+	  IF(IFMIN >= 1)THEN
 	   WRITE(DESCR3,1012) IFMIN
-           IF (IHR.LT.100) THEN
+           IF (IHR<100) THEN
 	     WRITE(DESCR2,1012) IHR
              FNAME = ENVAR(1:KENV) // DATSET(1:KDAT) // DESCR2(1:2)  &
       	     //':'// DESCR3(1:2) //'.'// RESTHR
@@ -904,7 +905,7 @@
       	     //':'// DESCR3(1:2) //'.'// RESTHR
            ENDIF
 	  ELSE
-           IF (IHR.LT.100) THEN
+           IF (IHR<100) THEN
              WRITE(DESCR2,1012) IHR
              FNAME = ENVAR(1:KENV) // DATSET(1:KDAT) // DESCR2(1:2) &
                     //'.'// RESTHR
@@ -919,10 +920,10 @@
          ENDIF
 !
 !        ASSIGN AND OPEN UNIT FOR GRIB DATA FILE.
-         if ( num_servers .eq. 0 ) then
+         if ( num_servers == 0 ) then
          CLOSE(LUNOUT)
          CALL BAOPENWT(LUNOUT,FNAME,IER)
-         IF (IER.NE.0) WRITE(6,*)                                   &
+         IF (IER/=0) WRITE(6,*)                                   &
             'GRIBIT:  BAOPEN ERROR FOR GRIB DATA ','FILE.  IER=',IER
          WRITE(6,*)'GRIBIT:  OPENED ',LUNOUT,                       &
               ' FOR GRIB DATA ',FNAME
@@ -936,7 +937,7 @@
 !     SEND DATA TO I/O SERVERS
 !
 !
-       if ( num_servers .gt. 0 ) then
+       if ( num_servers > 0 ) then
        DO I = 1, 5
           CALL MPI_WAIT(IH(I),STATUS,IERR)
        END DO

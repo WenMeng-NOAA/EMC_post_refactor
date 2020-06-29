@@ -24,6 +24,7 @@ subroutine rtsig(lusig,head,k1,k2,kgds,ijo,levs,ntrac,jcap,lnt2,me,     &
 !                                 taking advantage of threding in SP library.
 !                                 This really speeds up the code
 !                                 Also threaded loop for Temperature from Tv
+!   2020-06-30  Bo CUI: Modernize inequality statements from Fortran 77 to 90
 
 !
 ! Usage:  call rtsig(lusig,head,k1,k2,kgds,ijo,nct,                     &
@@ -585,7 +586,7 @@ end subroutine
                xcp  = 0.0
                sumq = 0.0
                do n=1,ntrac
-                 if( cpi(n) .ne. 0.0 ) then
+                 if( cpi(n) /= 0.0 ) then
                    xcp  = xcp  + cpi(n)*q(i,k+(n-1)*km)
                    sumq = sumq + q(i,k+(n-1)*km)
                  endif

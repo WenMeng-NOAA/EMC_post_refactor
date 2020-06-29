@@ -10,6 +10,7 @@
 !     
 ! PROGRAM HISTORY LOG:
 !   06-05-04  M TSIDULKO 
+!   20-06-30  B CUI - MODERNIZE INEQUALITY STATEMENTS FROM FORTRAN 77 TO 90
 !   
 ! USAGE:    CALL CALPBL(PBLRI)
 !   INPUT ARGUMENT LIST:
@@ -196,7 +197,7 @@
 !  BETWEEN HEIGHTS, AND PREVIOUS (RIBP) AND CURRENT (RIB) BULK
 !  RICHARDSON NUMBERS.  L IS BOUNDARY-LAYER TOP LEVEL NUMBER.
 ! --------------------------------------------------------------------
-            IF (RIB.GE.RICR.AND.ICALPBL(I,J).EQ.0) THEN
+            IF (RIB>=RICR.AND.ICALPBL(I,J)==0) THEN
               PBLRI(I,J) = ZMID(I,J,L)+(ZMID(I,J,L-1)-ZMID(I,J,L))*      &
                            (RICR-RIBP(I,J))/(RIB-RIBP(I,J))
               ICALPBL(I,J) = 1
