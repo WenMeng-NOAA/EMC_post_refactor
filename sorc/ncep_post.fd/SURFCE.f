@@ -891,7 +891,11 @@
         ENDIF
         IF (ID(18).LT.0) ID(18) = 0
 
-        CALL GRIBIT(IGET(244),LVLS(1,IGET(244)),GRID1,IM,JM)
+         if(grib=='grib2') then
+            cfld=cfld+1
+            fld_info(cfld)%ifld=IAVBLFLD(IGET(244))
+            datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+         endif
       ENDIF
 !
 !     PERCENT SNOW COVER.
@@ -1354,7 +1358,11 @@
            ISVALUE = 2
            ID(10) = MOD(ISVALUE/256,256)
            ID(11) = MOD(ISVALUE,256)
-           CALL GRIBIT(IGET(414),LVLS(1,IGET(414)),GRID1,IM,JM)
+         if(grib=='grib2') then
+            cfld=cfld+1
+            fld_info(cfld)%ifld=IAVBLFLD(IGET(414))
+            datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+         endif
         ENDIF
 !
 !        SHELTER LEVEL DEWPOINT, DEWPOINT DEPRESSION AND SFC EQUIV POT TEMP.
@@ -5103,12 +5111,7 @@
                GRID1(I,J)=CD10(I,J)
             ENDDO
          ENDDO
-         if(grib=='grib1') then
-            ID(1:25) = 0
-            ID(2)=2
-            ID(11)=10
-            CALL GRIBIT(IGET(922),LVLS(1,IGET(922)),GRID1,IM,JM)
-         elseif(grib=='grib2') then
+         if(grib=='grib2') then
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(922))
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
@@ -5120,12 +5123,7 @@
                GRID1(I,J)=CH10(I,J)
             ENDDO
          ENDDO
-         if(grib=='grib1') then
-            ID(1:25) = 0
-            ID(11)=10
-            ID(2)=128
-            CALL GRIBIT(IGET(923),LVLS(1,IGET(923)),GRID1,IM,JM)
-         elseif(grib=='grib2') then
+         if(grib=='grib2') then
             cfld=cfld+1
             fld_info(cfld)%ifld=IAVBLFLD(IGET(923))
             datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
@@ -5143,7 +5141,12 @@
             ENDDO
             ENDDO
             ID(1:25) = 0
-            CALL GRIBIT(IGET(900),LVLS(1,IGET(900)),GRID1,IM,JM)
+         if(grib=='grib2') then
+            cfld=cfld+1
+            fld_info(cfld)%ifld=IAVBLFLD(IGET(900))
+            datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+         endif
+
          ENDIF
 !
 !        MODEL OUTPUT SURFACE V COMPONENT WIND STRESS
@@ -5154,7 +5157,11 @@
             ENDDO
             ENDDO
             ID(1:25) = 0
-            CALL GRIBIT(IGET(901),LVLS(1,IGET(901)),GRID1,IM,JM)
+         if(grib=='grib2') then
+            cfld=cfld+1
+            fld_info(cfld)%ifld=IAVBLFLD(IGET(901))
+            datapd(1:im,1:jend-jsta+1,cfld)=GRID1(1:im,jsta:jend)
+         endif
          ENDIF
       ENDIF
 !
