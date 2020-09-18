@@ -1,9 +1,13 @@
 !
+! Program history log:
+!   2020-09-30  Bo Cui - add "implicit none" statements
+
 !       function written early Dec. 1999 by M. Pyle to support  workstation
 !       Eta for users with etime but not timef functionality (like  certain
 !mp     HPs)  Designed to duplicate timef (elapsed time in milliseconds)
 !
         function timef()
+        implicit none
         real et(2)
         real*8 timef
         timef=etime(et)
@@ -11,6 +15,7 @@
         end
 
         function rtc()
+        implicit none
         real et(2)
         real*8 rtc
         rtc=etime(et)

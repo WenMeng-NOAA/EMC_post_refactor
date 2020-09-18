@@ -1,3 +1,6 @@
+! Program history log:
+!   2020-09-30  Bo Cui - add "implicit none" statements
+
         module xml_perl_data
 !------------------------------------------------------------------------
 !
@@ -81,6 +84,7 @@
          use rqstfld_mod,only: num_post_afld,MXLVL,lvlsxml
          use CTLBLK_mod, only:tprec,tclod,trdlw,trdsw,tsrfc &
                               ,tmaxmin,td3d,me,filenameflat
+         implicit none
 
 ! Read in the flat file postxconfig-NT.txt
 ! for current working parameters and param
@@ -309,6 +313,7 @@
 
 
         subroutine filter_char_inp (inpchar)
+          implicit none
           character, intent(inout)    :: inpchar
           if (inpchar == "?") then
             inpchar = ""

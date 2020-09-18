@@ -2,10 +2,14 @@
 
 ! -----  Constants related to microphysics
 !          -- computed in paramr.f
-!
 
 !      REAL ABER1(31),ABER2(31)
 ! LOOKUP TABLE FOR A1 AND A2 IN BERGERON PROCESS
+
+! Program history log:
+!   2020-09-30  Bo Cui - add "implicit none" statements
+
+      implicit none
 
       REAL PI,RON,SON,GON,BR,BS,BG,DRAIN,DSNOW,          &
       DGRAUPEL,RON2,DIACE_min,                           &
